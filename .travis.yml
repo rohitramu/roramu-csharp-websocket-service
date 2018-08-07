@@ -1,0 +1,8 @@
+language: csharp
+solution: RoRamu.WebSocket.ServiceFramework.sln
+mono: none
+dotnet: 2.1.2
+script:
+  - dotnet build $TRAVIS_SOLUTION --configuration $CONFIGURATION --source $NUGET_SOURCE_PULL
+after_success:
+  - find -name '*.nupkg' | xargs -i dotnet nuget push {} --api-key $NUGET_API_KEY --source $NUGET_SOURCE_PUSH
