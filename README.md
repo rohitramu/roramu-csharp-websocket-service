@@ -1,0 +1,1 @@
+# Rohit's C# WebSocket Service Framework [![Build Status](https://travis-ci.com/rohitramu/roramu-csharp-websocket-service-framework.svg?branch=master)](https://travis-ci.com/rohitramu/roramu-csharp-websocket-service-framework)
