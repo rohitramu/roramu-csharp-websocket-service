@@ -2,7 +2,15 @@ language: csharp
 solution: RoRamu.WebSocket.ServiceFramework.sln
 mono: none
 dotnet: 2.1.2
+before_install:
+  - NUGET_PACKAGE_VERSION="${TRAVIS_TAG:-0.0.0}"
+  - echo "$NUGET_PACKAGE_VERSION"
 script:
-  - dotnet build $TRAVIS_SOLUTION --configuration $CONFIGURATION --source $NUGET_SOURCE_PULL /p:VersionSuffix=$(date +"D%Y%m%dT%H%M%S")
-after_success:
-  - find -name '*.nupkg' | xargs -i dotnet nuget push {} --api-key $NUGET_API_KEY --source $NUGET_SOURCE_PUSH
+  - dotnet build $TRAVIS_SOLUTION --configuration $CONFIGURATION --source $NUGET_SOURCE_PULL /p:Version=$NUGET_PACKAGE_VERSION
+deploy:
+  skip_cleanup: true
+  provider: script
+  script:
+    - find -name '*.nupkg' | xargs -i dotnet nuget push {} --api-key $NUGET_API_KEY --source $NUGET_SOURCE_PUSH
+  on:
+    tags: true

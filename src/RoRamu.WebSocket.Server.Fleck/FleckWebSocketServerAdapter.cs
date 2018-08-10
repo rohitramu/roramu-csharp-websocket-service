@@ -8,9 +8,9 @@
     using RoRamu.Utils.Logging;
     using RoRamu.Utils;
 
-    public sealed class FleckWebSocketServer : IWebSocketServer
+    public sealed class FleckWebSocketServerAdapter : IWebSocketServer
     {
-        public Action<IWebSocket> OnOpen { get; set; }
+        public Action<WebSocket> OnOpen { get; set; }
 
         public const int DefaultPortSecured = 443;
         public const int DefaultPortUnsecured = 80;
@@ -18,7 +18,7 @@
         public const string WebSocketSchemeSecured = "wss";
         public const string WebSocketSchemeUnsecured = "ws";
 
-        public Logger Logger { get; set; } = Logger.DefaultLogger;
+        public Logger Logger { get; set; } = Logger.Default;
 
         public int Port { get; }
 
@@ -34,7 +34,7 @@
 
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        public FleckWebSocketServer(int? port = null, X509Certificate2 certificate = null)
+        public FleckWebSocketServerAdapter(int? port = null, X509Certificate2 certificate = null)
         {
             if (port < 0)
             {
@@ -78,7 +78,7 @@
                     switch (level)
                     {
                         case Fleck.LogLevel.Debug:
-                            Logger.Log(LogLevel.Debug, message);
+                            //Logger.Log(LogLevel.Debug, message);
                             break;
                         case Fleck.LogLevel.Error:
                             Logger.Log(LogLevel.Error, message, ex);
@@ -92,7 +92,6 @@
                     }
                 }
             };
-            Fleck.FleckLog.Level = Fleck.LogLevel.Warn;
         }
 
         private readonly object _startLock = new object();
@@ -147,24 +146,13 @@
 
         private void FleckServiceConfig(Fleck.IWebSocketConnection socket)
         {
-            socket.OnOpen = () => this.OnOpen?.Invoke(new FleckWebSocketProxy(socket));
+            // Throw an exception if the "OnOpen" method has not been defined, so that clients cannot connect without validation
+            socket.OnOpen = () => this.OnOpen(new FleckWebSocketProxy(socket));
         }
 
-        private class FleckWebSocketProxy : IWebSocket
+        private class FleckWebSocketProxy : WebSocket
         {
-            public Action OnClose { get; set; }
-            public Action<Exception> OnError { get; set; }
-            public Action<string> OnMessage { get; set; }
-
             public const int MaxTextMessageLength = 1024 * 8;
-
-            public bool IsOpen => this._socket.IsAvailable;
-
-            public IReadOnlyDictionary<string, string> Headers { get; }
-
-            public IReadOnlyDictionary<string, string> Cookies { get; }
-
-            public string ClientIpAddress { get; }
 
             private readonly Fleck.IWebSocketConnection _socket;
 
@@ -173,7 +161,7 @@
                 this._socket = socket ?? throw new ArgumentNullException(nameof(socket));
                 this.Headers = new Dictionary<string, string>(socket.ConnectionInfo.Headers);
                 this.Cookies = new Dictionary<string, string>(socket.ConnectionInfo.Cookies);
-                this.ClientIpAddress = socket.ConnectionInfo.ClientIpAddress;
+                this.ClientIpAddress = $"{socket.ConnectionInfo.ClientIpAddress}:{socket.ConnectionInfo.ClientPort}";
 
                 socket.OnMessage = message => this.OnMessage?.Invoke(message);
                 socket.OnBinary = data => this.OnMessage?.Invoke(data.DecodeToString());
@@ -181,12 +169,17 @@
                 socket.OnClose = () => this.OnClose?.Invoke();
             }
 
-            public async Task Close()
+            public override bool IsOpen()
+            {
+                return this._socket.IsAvailable;
+            }
+
+            public override async Task Close()
             {
                 await Task.Run(() => this._socket.Close());
             }
 
-            public async Task SendMessage(string message)
+            public override async Task SendMessage(string message)
             {
                 if (message.Length <= MaxTextMessageLength)
                 {

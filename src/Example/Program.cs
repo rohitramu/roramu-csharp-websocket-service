@@ -12,9 +12,9 @@
         static void Main(string[] args)
         {
             Logger.LogExtraInfo = false;
-            Logger.LogLevel = LogLevel.Info;
+            Logger.LogLevel = LogLevel.Debug;
 
-            var service = new TestService(new FleckWebSocketServer());
+            var service = new TestService(new FleckWebSocketServerAdapter());
 
             Task serviceTask = service.Start();
             
@@ -25,7 +25,11 @@
                 {
                     break;
                 }
-                service.Broadcast(input).Wait();
+
+                foreach (TestProxy proxy in service.Connections.Values)
+                {
+                    proxy.SendMessage(input).Start();
+                }
             }
 
             service.Stop();
@@ -42,33 +46,26 @@
                 string clientIpAddress,
                 IReadOnlyDictionary<string, string> headers,
                 IReadOnlyDictionary<string, string> cookies,
-                IsOpen isOpenFunc,
-                SendMessage sendMessageFunc,
-                Close closeFunc)
+                WebSocketProxyActions proxyActions)
             {
-                return new TestProxy(
-                    "test ID",
-                    isOpenFunc,
-                    sendMessageFunc,
-                    closeFunc);
+                return new TestProxy("test ID", proxyActions);
             }
         }
 
-        private class TestProxy : WebSocketProxy
+        private class TestProxy : WebSocketClientProxy
         {
-            public TestProxy(
-                string id,
-                IsOpen isOpenFunc,
-                SendMessage sendMessageFunc,
-                Close closeFunc) : base(id, isOpenFunc, sendMessageFunc, closeFunc)
+            public TestProxy(string id, WebSocketProxyActions proxyActions) : base(id, proxyActions)
             {
-
             }
 
-            public override async void OnMessage(string message)
+            public override async void OnMessage(Message message)
             {
-                base.OnMessage(message);
                 await this.SendMessage(message);
+            }
+
+            public async Task SendMessage(string message)
+            {
+                await base.SendMessage(new Request("TestMessage", message));
             }
         }
     }
