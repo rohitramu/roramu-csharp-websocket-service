@@ -6,7 +6,7 @@
 
     public class Message
     {
-        public static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings()
+        private static JsonSerializerSettings JsonSerializerSettings { get; } = new JsonSerializerSettings()
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
         };
@@ -29,7 +29,12 @@
         {
             if (this._cache == null)
             {
-                this._cache = JsonConvert.SerializeObject(this, Message.JsonSerializerSettings);
+                this._cache = JsonConvert.SerializeObject(new
+                {
+                    this.Id,
+                    this.MessageType,
+                    this.Body,
+                }, Message.JsonSerializerSettings);
             }
 
             return this._cache;

@@ -11,7 +11,7 @@
     {
         static void Main(string[] args)
         {
-            Logger.LogExtraInfo = false;
+            Logger.LogExtraInfo = true;
             Logger.LogLevel = LogLevel.Debug;
 
             var service = new TestService(new FleckWebSocketServerAdapter());

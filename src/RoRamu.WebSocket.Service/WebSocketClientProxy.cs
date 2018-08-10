@@ -127,12 +127,12 @@
 
                     await this.SendMessage(new ErrorResponse(
                             error: ex,
-                            includeStackTraceAndExceptionType: false,
-                            request: failedRequest));
+                            request: failedRequest,
+                            includeStackTraceAndExceptionType: false));
                 }
                 finally
                 {
-                    this.Logger.Log(LogLevel.Error, $"Badly formed JSON request from client with ID: {this.Id}", ex);
+                    this.Logger.Log(LogLevel.Error, $"Failed to handle message from client with ID: {this.Id}", ex);
                 }
             }
         }

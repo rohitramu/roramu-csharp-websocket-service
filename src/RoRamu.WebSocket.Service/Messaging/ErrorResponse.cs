@@ -1,6 +1,7 @@
 ﻿namespace RoRamu.WebSocket.Service
 {
     using System;
+    using Newtonsoft.Json.Linq;
     using RoRamu.Utils;
 
     public class ErrorResponse : Response
@@ -11,9 +12,9 @@
 
         public ErrorResponse(
             Exception error,
-            bool includeStackTraceAndExceptionType = false,
-            Request request = null)
-            : base(request, error?.ToJsonString(includeStackTraceAndExceptionType))
+            Request request = null,
+            bool includeStackTraceAndExceptionType = false)
+            : base(request, new JRaw(error?.ToJsonString(includeStackTraceAndExceptionType)))
         {
             this.Error = error ?? throw new ArgumentNullException();
         }
