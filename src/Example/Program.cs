@@ -15,7 +15,6 @@
             Logger.LogLevel = LogLevel.Debug;
 
             var service = new TestService(new FleckWebSocketServerAdapter());
-
             Task serviceTask = service.Start();
             
             while (true)
@@ -48,7 +47,7 @@
                 IReadOnlyDictionary<string, string> cookies,
                 WebSocketProxyActions proxyActions)
             {
-                return new TestProxy("test ID", proxyActions);
+                return new TestProxy(DateTime.Now.ToString(), proxyActions);
             }
         }
 
@@ -63,7 +62,16 @@
                 await this.SendMessage(message);
             }
 
-            public async Task SendMessage(string message)
+            public override async void OnOpen()
+            {
+                await this.SendMessage(new
+                {
+                    MyMessage = "Hello, World!",
+                    ClientId = this.Id,
+                });
+            }
+
+            public async Task SendMessage(object message)
             {
                 await base.SendMessage(new Request("TestMessage", message));
             }

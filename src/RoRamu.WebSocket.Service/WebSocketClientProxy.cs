@@ -20,7 +20,7 @@
 
         public async Task SendMessage(Message message)
         {
-            this.Logger?.Log(LogLevel.Debug, "Sending message", message);
+            this.Logger?.Log(LogLevel.Debug, $"Sending message{(message.Id == null ? string.Empty : $" '{message.Id}'")} to client with ID: {this.Id}", message);
             try
             {
                 if (message == null)
@@ -31,7 +31,7 @@
             }
             catch (Exception ex)
             {
-                this.Logger?.Log(LogLevel.Error, $"Failed to send message to client with ID: {this.Id}", ex);
+                this.Logger?.Log(LogLevel.Warning, $"Failed to send message to client with ID: {this.Id}", ex);
             }
         }
 
@@ -44,7 +44,7 @@
             }
             catch (Exception ex)
             {
-                this.Logger?.Log(LogLevel.Error, $"Failed to gracefully close connection to client with ID: {this.Id}", ex);
+                this.Logger?.Log(LogLevel.Warning, $"Failed to gracefully close connection to client with ID: {this.Id}", ex);
             }
         }
 
@@ -78,7 +78,7 @@
             }
             catch (Exception ex)
             {
-                this.Logger?.Log(LogLevel.Error, $"Failed to handle new open connection to client with ID: {this.Id}", ex);
+                this.Logger?.Log(LogLevel.Warning, $"Failed to handle new open connection to client with ID: {this.Id}", ex);
             }
         }
 
@@ -91,7 +91,7 @@
             }
             catch (Exception ex)
             {
-                this.Logger?.Log(LogLevel.Error, $"Failed to handle closing connection to client with ID: {this.Id}", ex);
+                this.Logger?.Log(LogLevel.Warning, $"Failed to handle closing connection to client with ID: {this.Id}", ex);
             }
         }
 
@@ -104,13 +104,13 @@
             }
             catch (Exception ex)
             {
-                this.Logger?.Log(LogLevel.Error, $"Failed to handle error in connection to client with ID: {this.Id}", ex);
+                this.Logger?.Log(LogLevel.Warning, $"Failed to handle error in connection to client with ID: {this.Id}", ex);
             }
         }
 
-        internal async void OnMessageInternal(string stringMessage)
+        internal void OnMessageInternal(string stringMessage)
         {
-            this.Logger?.Log<string>(LogLevel.Debug, "Message received", stringMessage);
+            this.Logger?.Log<string>(LogLevel.Debug, $"Message received from client with ID: {this.Id}", stringMessage);
             Message message = null;
             try
             {
@@ -119,21 +119,27 @@
             }
             catch (Exception ex)
             {
-                try
-                {
-                    Request failedRequest = message == null
-                        ? failedRequest = new Request(null, WellKnownMessageTypes.Unknown.ToString(), stringMessage)
-                        : failedRequest = new Request(message.Id, message.MessageType, message.Body);
+                this.Logger?.Log(LogLevel.Warning, $"Failed to handle message from client with ID: {this.Id}", ex);
+                
+                Request failedRequest = message == null
+                    ? failedRequest = new Request(
+                        null,
+                        WellKnownMessageTypes.Unknown.ToString(),
+                        stringMessage)
+                    : failedRequest = new Request(
+                        message.Id,
+                        message.MessageType ?? WellKnownMessageTypes.Unknown.ToString(),
+                        message.Body);
 
-                    await this.SendMessage(new ErrorResponse(
-                            error: ex,
-                            request: failedRequest,
-                            includeStackTraceAndExceptionType: false));
-                }
-                finally
+                ErrorResponse errorResponse = new ErrorResponse(
+                    error: ex,
+                    request: failedRequest,
+                    includeStackTraceAndExceptionType: false);
+
+                this.SendMessage(errorResponse).ContinueWith(sendTask =>
                 {
-                    this.Logger.Log(LogLevel.Error, $"Failed to handle message from client with ID: {this.Id}", ex);
-                }
+                    this.Logger?.Log(LogLevel.Warning, $"Failed to send error to client with ID: {this.Id}", sendTask.Exception);
+                }, TaskContinuationOptions.OnlyOnFaulted);
             }
         }
     }

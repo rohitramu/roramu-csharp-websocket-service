@@ -17,6 +17,7 @@
             : base(request, new JRaw(error?.ToJsonString(includeStackTraceAndExceptionType)))
         {
             this.Error = error ?? throw new ArgumentNullException();
+            this.MessageType = WellKnownMessageTypes.Error.ToString();
         }
     }
 }

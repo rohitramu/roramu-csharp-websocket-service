@@ -39,40 +39,29 @@
         {
             Task.Run(() =>
             {
-                // Create the proxy for this connection
-                return this.CreateProxy(socket);
-            }).ContinueWith(task =>
-            {
-                if (task.IsFaulted)
-                {
-                    this.Logger?.Log(LogLevel.Error, "Failed to create client connection proxy", task.Exception);
-                }
-                else
-                {
-                    // Set the proxy for this connection
-                    TClientProxy proxy = task.Result;
-                    this._connections.AddOrUpdate(
+                // Create and set the proxy for this connection
+                TClientProxy proxy = this.CreateProxy(socket);
+                this._connections.AddOrUpdate(
                     key: proxy.Id,
                     addValue: proxy,
                     updateValueFactory: (id, oldProxy) =>
                     {
                         // Close the old connection and swallow any exceptions
-                        Task.Run(async () =>
+                        oldProxy.Close().ContinueWith(closeTask =>
                         {
-                            try
-                            {
-                                await oldProxy.Close();
-                            }
-                            catch (Exception ex)
-                            {
-                                this.Logger?.Log(LogLevel.Warning, $"Failed to close duplicate connection to client with ID: {id}", ex);
-                            }
-                        }).ConfigureAwait(false);
+                            this.Logger?.Log(LogLevel.Warning, $"Failed to close duplicate connection to client with ID: {id}", closeTask.Exception);
+                        }, TaskContinuationOptions.OnlyOnFaulted);
 
                         return proxy;
                     });
-                }
-            });
+            }).ContinueWith(createProxyTask =>
+            {
+                this.Logger?.Log(LogLevel.Error, "Failed to create client connection proxy", createProxyTask.Exception);
+                socket.Close().ContinueWith(closeTask =>
+                {
+                    this.Logger?.Log(LogLevel.Warning, $"Could not close the connection for which proxy creation failed", closeTask.Exception);
+                }, TaskContinuationOptions.OnlyOnFaulted);
+            }, TaskContinuationOptions.OnlyOnFaulted);
         }
 
         private TClientProxy CreateProxy(WebSocket socket)
