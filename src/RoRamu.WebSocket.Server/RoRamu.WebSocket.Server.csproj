@@ -8,6 +8,7 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl></PackageProjectUrl>
     <Copyright>Rohit Ramu</Copyright>
+    <Version>0.0.0</Version>
     <AssemblyVersion>1.0.*</AssemblyVersion>
     <Deterministic>false</Deterministic>
     <NoWarn>CS7035;IDE0037</NoWarn>

@@ -110,7 +110,7 @@
 
         internal async void OnMessageInternal(string stringMessage)
         {
-            this.Logger?.Log(LogLevel.Debug, "Message received", stringMessage);
+            this.Logger?.Log<string>(LogLevel.Debug, "Message received", stringMessage);
             Message message = null;
             try
             {
