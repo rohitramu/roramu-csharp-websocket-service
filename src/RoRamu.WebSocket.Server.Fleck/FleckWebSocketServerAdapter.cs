@@ -73,23 +73,20 @@
             // Logging
             Fleck.FleckLog.LogAction = (Fleck.LogLevel level, string message, Exception ex) =>
             {
-                if (this.Logger != null)
+                switch (level)
                 {
-                    switch (level)
-                    {
-                        case Fleck.LogLevel.Debug:
-                            //Logger.Log(LogLevel.Debug, message);
-                            break;
-                        case Fleck.LogLevel.Error:
-                            Logger.Log(LogLevel.Error, message, ex);
-                            break;
-                        case Fleck.LogLevel.Warn:
-                            Logger.Log(LogLevel.Warning, message);
-                            break;
-                        default:
-                            Logger.Log(LogLevel.Info, message);
-                            break;
-                    }
+                    case Fleck.LogLevel.Debug:
+                        //this.Logger?.Log(LogLevel.Debug, message, ex);
+                        break;
+                    case Fleck.LogLevel.Error:
+                        this.Logger?.Log(LogLevel.Error, message, ex);
+                        break;
+                    case Fleck.LogLevel.Warn:
+                        this.Logger?.Log(LogLevel.Warning, message, ex);
+                        break;
+                    default:
+                        this.Logger?.Log(LogLevel.Info, message, ex);
+                        break;
                 }
             };
         }

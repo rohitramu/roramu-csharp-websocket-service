@@ -1,14 +1,11 @@
 ﻿namespace RoRamu.WebSocket.Service
 {
-    using System;
-
     public class Response : Message
     {
-        public Request Request { get; }
+        public static string MessageType { get; } = WellKnownMessageTypes.Response;
 
-        public Response(Request request, object body) : base(request?.Id, WellKnownMessageTypes.Response.ToString(), body)
+        public Response(string requestId, object body, bool isError = false) : base(requestId, isError ? ErrorResponse.MessageType : Response.MessageType, body)
         {
-            this.Request = request ?? throw new ArgumentNullException(nameof(request));
         }
     }
 }

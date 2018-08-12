@@ -13,14 +13,14 @@
 
         public string Id { get; }
 
-        public string MessageType { get; }
+        public string Type { get; }
         
         public object Body { get; }
 
-        public Message(string id, string messageType, object body)
+        public Message(string id, string type, object body)
         {
             this.Id = id;
-            this.MessageType = messageType ?? throw new ArgumentNullException(nameof(messageType));
+            this.Type = type ?? throw new ArgumentNullException(nameof(type));
             this.Body = body;
         }
 
@@ -32,7 +32,7 @@
                 this._cache = JsonConvert.SerializeObject(new
                 {
                     this.Id,
-                    this.MessageType,
+                    this.Type,
                     this.Body,
                 }, Message.JsonSerializerSettings);
             }

@@ -4,11 +4,15 @@
 
     public class Request : Message
     {
-        internal Request(string id, string messageType, object body) : base(id, messageType, body)
+        internal Request(string id, string type, object body) : base(id, type, body)
         {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
         }
 
-        public Request(string messageType, object body) : base(Guid.NewGuid().ToString(), messageType, body)
+        public Request(string type, object body) : base(Guid.NewGuid().ToString(), type, body)
         {
         }
     }

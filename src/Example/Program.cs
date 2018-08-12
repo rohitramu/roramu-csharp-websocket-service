@@ -9,6 +9,8 @@
 
     public class Program
     {
+        private static readonly Logger Logger = Logger.Default;
+
         static void Main(string[] args)
         {
             Logger.LogExtraInfo = true;
@@ -16,6 +18,7 @@
 
             var service = new TestService(new FleckWebSocketServerAdapter());
             Task serviceTask = service.Start();
+            TestProxy.DefaultRequestTimeout = TimeSpan.FromSeconds(15);
             
             while (true)
             {
@@ -27,7 +30,32 @@
 
                 foreach (TestProxy proxy in service.Connections.Values)
                 {
-                    proxy.SendMessage(input).Start();
+                    Request request = new Request("test_request", new
+                    {
+                        TestRequestMessage = input,
+                        FixedMessage = "This is a request!",
+                    });
+
+                    proxy.SendRequest(request).ContinueWith(task =>
+                    {
+                        if (task.IsFaulted)
+                        {
+                            Logger?.Log(LogLevel.Error, $"Request '{request.Id}' to client '{proxy.Id}' failed", task.Exception);
+                        }
+                        else
+                        {
+                            RequestResult requestResult = task.Result;
+                            if (requestResult.IsSuccessful)
+                            {
+                                Logger?.Log(LogLevel.Info, $"Request '{request.Id}' to client '{proxy.Id}' succeeded!", requestResult.Response.Body);
+                            }
+                            else
+                            {
+                                object extraInfo = requestResult.Exception ?? requestResult.Response.Body;
+                                Logger?.Log(LogLevel.Warning, $"Request '{request.Id}' to client '{proxy.Id}' received an error", extraInfo);
+                            }
+                        }
+                    });
                 }
             }
 
@@ -47,7 +75,7 @@
                 IReadOnlyDictionary<string, string> cookies,
                 WebSocketProxyActions proxyActions)
             {
-                return new TestProxy(DateTime.Now.ToString(), proxyActions);
+                return new TestProxy(Guid.NewGuid().ToString(), proxyActions);
             }
         }
 
@@ -64,16 +92,11 @@
 
             public override async void OnOpen()
             {
-                await this.SendMessage(new
+                await this.SendMessage(new Message(null, "TestMessage", new
                 {
                     MyMessage = "Hello, World!",
                     ClientId = this.Id,
-                });
-            }
-
-            public async Task SendMessage(object message)
-            {
-                await base.SendMessage(new Request("TestMessage", message));
+                }));
             }
         }
     }

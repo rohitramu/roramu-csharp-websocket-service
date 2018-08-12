@@ -1,10 +1,9 @@
 ﻿namespace RoRamu.WebSocket.Service
 {
-    public enum WellKnownMessageTypes
+    public static class WellKnownMessageTypes
     {
-        Unknown,
-        ServiceStatus,
-        Response,
-        Error,
+        public const string Unknown = nameof(Unknown);
+        public const string Response = nameof(Response);
+        public const string Error = nameof(Error);
     }
 }

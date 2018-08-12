@@ -6,18 +6,19 @@
 
     public class ErrorResponse : Response
     {
-        public new string MessageType { get; } = WellKnownMessageTypes.Error.ToString();
+        public new const string MessageType = WellKnownMessageTypes.Error;
 
         public Exception Error { get; }
 
         public ErrorResponse(
             Exception error,
-            Request request = null,
-            bool includeStackTraceAndExceptionType = false)
-            : base(request, new JRaw(error?.ToJsonString(includeStackTraceAndExceptionType)))
+            string requestId,
+            bool includeDebugInfo = false)
+            : base(
+                  requestId,
+                  new JRaw(error == null ? throw new ArgumentNullException(nameof(error)) : error.ToJsonString(includeDebugInfo)),
+                  true)
         {
-            this.Error = error ?? throw new ArgumentNullException();
-            this.MessageType = WellKnownMessageTypes.Error.ToString();
         }
     }
 }
