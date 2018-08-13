@@ -4,9 +4,9 @@
 
     public class WebSocketProxyValidationFailure : Exception
     {
-        public WebSocketClientProxy InvalidProxy { get; }
+        public WebSocketConnectionProxy InvalidProxy { get; }
 
-        public WebSocketProxyValidationFailure(WebSocketClientProxy invalidProxy, string message) : base(message)
+        public WebSocketProxyValidationFailure(WebSocketConnectionProxy invalidProxy, string message) : base(message)
         {
             this.InvalidProxy = invalidProxy;
         }

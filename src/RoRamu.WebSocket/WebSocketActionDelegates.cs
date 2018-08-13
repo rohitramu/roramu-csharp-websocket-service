@@ -1,4 +1,4 @@
-﻿namespace RoRamu.WebSocket.Service
+﻿namespace RoRamu.WebSocket
 {
     using System.Threading.Tasks;
 

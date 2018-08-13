@@ -1,16 +1,16 @@
-﻿namespace RoRamu.WebSocket.Service
+﻿namespace RoRamu.WebSocket
 {
     using System;
 
-    public class WebSocketProxyActions
+    public class WebSocketActions
     {
-        internal IsOpenDelegate IsOpen { get; }
+        public IsOpenDelegate IsOpen { get; }
 
-        internal SendMessageDelegate SendMessage { get; }
+        public SendMessageDelegate SendMessage { get; }
 
-        internal CloseDelegate Close { get; }
+        public CloseDelegate Close { get; }
 
-        public WebSocketProxyActions(
+        public WebSocketActions(
             IsOpenDelegate isOpenFunc,
             SendMessageDelegate sendMessageFunc,
             CloseDelegate closeFunc)

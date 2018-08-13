@@ -1,4 +1,4 @@
-﻿namespace RoRamu.WebSocket.Service
+﻿namespace RoRamu.WebSocket
 {
     using System;
     using Newtonsoft.Json.Linq;
@@ -19,6 +19,20 @@
                   new JRaw(error == null ? throw new ArgumentNullException(nameof(error)) : error.ToJsonString(includeDebugInfo)),
                   true)
         {
+        }
+
+        public static ErrorResponse Create(Message request, Exception error, bool includeDebugInfo = false)
+        {
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (error == null)
+            {
+                throw new ArgumentNullException(nameof(error));
+            }
+
+            return new ErrorResponse(error, request.Id, includeDebugInfo);
         }
     }
 }

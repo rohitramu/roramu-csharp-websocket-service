@@ -11,6 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoRamu.WebSocket.Server.Fle
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoRamu.WebSocket.Service", "src\RoRamu.WebSocket.Service\RoRamu.WebSocket.Service.csproj", "{5C8023D9-91FE-4BD6-A0BC-76BCFF4CA402}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoRamu.WebSocket.Client", "src\RoRamu.WebSocket.Client\RoRamu.WebSocket.Client.csproj", "{A9396186-729B-470E-9A8E-D28740729177}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoRamu.WebSocket", "src\RoRamu.WebSocket\RoRamu.WebSocket.csproj", "{422EAF51-06F2-4960-85B6-7341E04DBDE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoRamu.WebSocket.Client.WebSocket4Net", "src\RoRamu.WebSocket.Client.WebSocket4Net\RoRamu.WebSocket.Client.WebSocket4Net.csproj", "{62C99A46-46A9-40A4-918A-38797422D549}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +39,18 @@ Global
 		{5C8023D9-91FE-4BD6-A0BC-76BCFF4CA402}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C8023D9-91FE-4BD6-A0BC-76BCFF4CA402}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C8023D9-91FE-4BD6-A0BC-76BCFF4CA402}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9396186-729B-470E-9A8E-D28740729177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9396186-729B-470E-9A8E-D28740729177}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9396186-729B-470E-9A8E-D28740729177}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9396186-729B-470E-9A8E-D28740729177}.Release|Any CPU.Build.0 = Release|Any CPU
+		{422EAF51-06F2-4960-85B6-7341E04DBDE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{422EAF51-06F2-4960-85B6-7341E04DBDE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{422EAF51-06F2-4960-85B6-7341E04DBDE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{422EAF51-06F2-4960-85B6-7341E04DBDE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62C99A46-46A9-40A4-918A-38797422D549}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62C99A46-46A9-40A4-918A-38797422D549}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62C99A46-46A9-40A4-918A-38797422D549}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62C99A46-46A9-40A4-918A-38797422D549}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

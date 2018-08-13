@@ -5,10 +5,10 @@
 
     public interface IWebSocketServer
     {
-        Action<WebSocket> OnOpen { get; set; }
+        Action<WebSocketConnection, WebSocketConnectionInfo> OnOpen { get; set; }
 
         Task Start();
 
-        void Stop();
+        Task Stop();
     }
 }

@@ -24,11 +24,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="RoRamu.Utils" Version="*" />
     <PackageReference Include="RoRamu.Utils.Logging" Version="*" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\RoRamu.WebSocket\RoRamu.WebSocket.csproj" />
-  </ItemGroup>
-
 </Project>

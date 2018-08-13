@@ -30,17 +30,26 @@
             await this._server.Start();
         }
 
-        public void Stop()
+        public async Task Stop()
         {
-            this._server.Stop();
+            await this._server.Stop();
         }
 
-        private void OnOpen(WebSocket socket)
+        private void OnOpen(WebSocketConnection socket, WebSocketConnectionInfo connectionInfo)
         {
+            if (socket == null)
+            {
+                throw new ArgumentNullException(nameof(socket));
+            }
+            if (connectionInfo == null)
+            {
+                throw new ArgumentNullException(nameof(connectionInfo));
+            }
+
             Task.Run(() =>
             {
                 // Create and set the proxy for this connection
-                TClientProxy proxy = this.CreateProxy(socket);
+                TClientProxy proxy = this.CreateProxy(socket, connectionInfo);
                 this._connections.AddOrUpdate(
                     key: proxy.Id,
                     addValue: proxy,
@@ -49,7 +58,7 @@
                         // Close the old connection and swallow any exceptions
                         oldProxy.Close().ContinueWith(closeTask =>
                         {
-                            this.Logger?.Log(LogLevel.Warning, $"Failed to close duplicate connection to client with ID: {id}", closeTask.Exception);
+                            this.Logger?.Log(LogLevel.Warning, $"Failed to close duplicate connection to client '{id}'", closeTask.Exception);
                         }, TaskContinuationOptions.OnlyOnFaulted);
 
                         return proxy;
@@ -64,20 +73,16 @@
             }, TaskContinuationOptions.OnlyOnFaulted);
         }
 
-        private TClientProxy CreateProxy(WebSocket socket)
+        private TClientProxy CreateProxy(WebSocketConnection socket, WebSocketConnectionInfo connectionInfo)
         {
             // Create the proxy actions
-            WebSocketProxyActions proxyActions = new WebSocketProxyActions(
-                isOpenFunc: () => socket.IsOpen(),
-                sendMessageFunc: (message) => socket.SendMessage(message.ToJsonString()),
-                closeFunc: () => socket.Close());
+            WebSocketActions proxyActions = new WebSocketActions(
+                isOpenFunc:         () => socket.IsOpen,
+                sendMessageFunc:    (message) => socket.SendMessage(message.ToJsonString()),
+                closeFunc:          () => socket.Close());
 
             // Create the proxy
-            TClientProxy proxy = this.CreateProxy(
-                socket.ClientIpAddress,
-                socket.Headers,
-                socket.Cookies,
-                proxyActions);
+            TClientProxy proxy = this.CreateProxy(connectionInfo, proxyActions);
 
             // Validate the proxy
             ValidateProxy(proxy, socket);
@@ -93,7 +98,7 @@
             return proxy;
         }
 
-        private void ValidateProxy(TClientProxy proxy, WebSocket socket)
+        private void ValidateProxy(TClientProxy proxy, WebSocketConnection socket)
         {
             string errorMessage = null;
             if (proxy == null)
@@ -120,9 +125,7 @@
         }
 
         protected abstract TClientProxy CreateProxy(
-            string clientIpAddress,
-            IReadOnlyDictionary<string, string> headers,
-            IReadOnlyDictionary<string, string> cookies,
-            WebSocketProxyActions proxyActions);
+            WebSocketConnectionInfo connectionInfo,
+            WebSocketActions proxyActions);
     }
 }

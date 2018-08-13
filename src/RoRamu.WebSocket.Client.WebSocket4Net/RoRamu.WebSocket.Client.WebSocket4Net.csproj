@@ -22,13 +22,12 @@
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="RoRamu.Utils.Logging" Version="*" />
+    <PackageReference Include="WebSocket4Net" Version="0.15.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RoRamu.WebSocket\RoRamu.WebSocket.csproj" />
+    <ProjectReference Include="..\RoRamu.WebSocket.Client\RoRamu.WebSocket.Client.csproj" />
   </ItemGroup>
 
 </Project>

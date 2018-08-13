@@ -1,17 +1,18 @@
-﻿namespace RoRamu.WebSocket.Service
+﻿namespace RoRamu.WebSocket
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
-    internal static class MessagingExtensionMethods
+    public static class MessagingExtensionMethods
     {
-        private static readonly ISet<string> ResponseMessageTypes = new HashSet<string>()
+        public static readonly IEnumerable<string> ResponseMessageTypes = new HashSet<string>()
         {
             WellKnownMessageTypes.Response,
             WellKnownMessageTypes.Error,
         };
 
-        internal static bool IsResponse(this Message message)
+        public static bool IsResponse(this Message message)
         {
             if (message == null)
             {
@@ -21,7 +22,7 @@
             return message.Id != null && ResponseMessageTypes.Contains(message.Type);
         }
 
-        internal static bool TryParseResponse(this Message message, out Response response)
+        public static bool TryParseResponse(this Message message, out Response response)
         {
             if (message == null)
             {

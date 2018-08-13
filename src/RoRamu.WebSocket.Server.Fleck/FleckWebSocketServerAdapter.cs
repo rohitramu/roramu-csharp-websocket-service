@@ -1,16 +1,13 @@
 ﻿namespace RoRamu.WebSocket.Server
 {
     using System;
-    using System.Collections.Generic;
     using System.Security.Cryptography.X509Certificates;
-    using System.Threading;
     using System.Threading.Tasks;
     using RoRamu.Utils.Logging;
-    using RoRamu.Utils;
 
     public sealed class FleckWebSocketServerAdapter : IWebSocketServer
     {
-        public Action<WebSocket> OnOpen { get; set; }
+        public Action<WebSocketConnection, WebSocketConnectionInfo> OnOpen { get; set; }
 
         public const int DefaultPortSecured = 443;
         public const int DefaultPortUnsecured = 80;
@@ -26,13 +23,15 @@
 
         public bool IsSecure { get; }
 
-        public bool IsRunning { get; private set; } = false;
+        public bool IsRunning => this._server != null;
 
         private string WebSocketScheme { get; }
 
         private string Location => $"{this.WebSocketScheme}://0.0.0.0:{this.Port}";
 
-        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private Fleck.WebSocketServer _server;
+
+        private readonly object _lock = new object();
 
         public FleckWebSocketServerAdapter(int? port = null, X509Certificate2 certificate = null)
         {
@@ -73,120 +72,141 @@
             // Logging
             Fleck.FleckLog.LogAction = (Fleck.LogLevel level, string message, Exception ex) =>
             {
+                LogLevel? logLevel = null;
                 switch (level)
                 {
-                    case Fleck.LogLevel.Debug:
-                        //this.Logger?.Log(LogLevel.Debug, message, ex);
-                        break;
                     case Fleck.LogLevel.Error:
-                        this.Logger?.Log(LogLevel.Error, message, ex);
+                        logLevel = LogLevel.Error;
                         break;
                     case Fleck.LogLevel.Warn:
-                        this.Logger?.Log(LogLevel.Warning, message, ex);
+                        logLevel = LogLevel.Warning;
+                        break;
+                    case Fleck.LogLevel.Info:
+                        //logLevel = LogLevel.Info;
                         break;
                     default:
-                        this.Logger?.Log(LogLevel.Info, message, ex);
+                        //logLevel = LogLevel.Debug;
                         break;
+                }
+
+                if (logLevel.HasValue)
+                {
+                    this.Logger?.Log(logLevel.Value, message, ex);
                 }
             };
         }
 
-        private readonly object _startLock = new object();
         public async Task Start()
         {
-            // Check if the service is already running
+            Logger?.Log(LogLevel.Debug, $"Starting server at '{this.Location}'");
+
+            string alreadyStartedMessage = $"Server at '{this.Location}' is already running";
+
+            // Check if the server is already running
             if (this.IsRunning)
             {
+                Logger?.Log(LogLevel.Debug, alreadyStartedMessage);
                 return;
             }
 
-            // Start the service in a new thread
+            // Start the server in a new thread
             await Task.Run(() =>
             {
-                lock (this._startLock)
+                lock (this._lock)
                 {
-                    // Check again if the service is already running in case it was started before reaching the lock statement
+                    // Check again if the server is already running in case it was started before reaching the lock statement
                     if (this.IsRunning)
                     {
+                        Logger?.Log(LogLevel.Debug, alreadyStartedMessage);
                         return;
                     }
 
-                    using (Fleck.WebSocketServer service = new Fleck.WebSocketServer(this.Location))
+                    // Try to start the server
+                    try
                     {
+                        // Create a new instance of the server
+                        this._server = new Fleck.WebSocketServer(this.Location);
+
                         // Set the cert if required
                         if (this.Certificate != null)
                         {
-                            service.Certificate = this.Certificate;
+                            this._server.Certificate = this.Certificate;
                         }
 
-                        // Start the service
-                        service.Start(FleckServiceConfig);
-
-                        // Mark this service as running
-                        this.IsRunning = true;
-
-                        // Wait for the cancellation token to tell the server to stop
-                        this._cancellationTokenSource.Token.WaitHandle.WaitOne();
+                        // Start the server
+                        this._server.Start(FleckServiceConfig);
+                        Logger?.Log(LogLevel.Info, $"Started server at '{this.Location}'");
+                    }
+                    catch (Exception ex)
+                    {
+                        try
+                        {
+                            this._server.Dispose();
+                        }
+                        finally
+                        {
+                            this._server = null;
+                            Logger?.Log(LogLevel.Error, $"Failed to start server at '{this.Location}'", ex);
+                        }
                     }
                 }
-            },
-            this._cancellationTokenSource.Token);
+            });
         }
 
-        public void Stop()
+        public async Task Stop()
         {
-            if (!this._cancellationTokenSource.IsCancellationRequested)
+            Logger?.Log(LogLevel.Debug, $"Stopping server at '{this.Location}'");
+
+            string alreadyStoppedMessage = $"Server at '{this.Location}' is already stopped";
+
+            // Check if the server is already stopped
+            if (!this.IsRunning)
             {
-                this._cancellationTokenSource.Cancel();
+                Logger?.Log(LogLevel.Debug, alreadyStoppedMessage);
+                return;
             }
+
+            // Stop the server in a new thread
+            await Task.Run(() =>
+            {
+                lock (this._lock)
+                {
+                    // Check again if the server is already stopped in case it was stopped before reaching the lock statement
+                    if (!this.IsRunning)
+                    {
+                        Logger?.Log(LogLevel.Debug, alreadyStoppedMessage);
+                        return;
+                    }
+
+                    // Try to stop the server
+                    try
+                    {
+                        this._server.Dispose();
+                        Logger?.Log(LogLevel.Info, $"Stopped server at '{this.Location}'");
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger?.Log(LogLevel.Error, $"Failed to stop server at '{this.Location}'", ex);
+                    }
+                }
+            });
         }
 
         private void FleckServiceConfig(Fleck.IWebSocketConnection socket)
         {
             // Throw an exception if the "OnOpen" method has not been defined, so that clients cannot connect without validation
-            socket.OnOpen = () => this.OnOpen(new FleckWebSocketProxy(socket));
-        }
-
-        private class FleckWebSocketProxy : WebSocket
-        {
-            public const int MaxTextMessageLength = 1024 * 8;
-
-            private readonly Fleck.IWebSocketConnection _socket;
-
-            public FleckWebSocketProxy(Fleck.IWebSocketConnection socket)
+            socket.OnOpen = () =>
             {
-                this._socket = socket ?? throw new ArgumentNullException(nameof(socket));
-                this.Headers = new Dictionary<string, string>(socket.ConnectionInfo.Headers);
-                this.Cookies = new Dictionary<string, string>(socket.ConnectionInfo.Cookies);
-                this.ClientIpAddress = $"{socket.ConnectionInfo.ClientIpAddress}:{socket.ConnectionInfo.ClientPort}";
-
-                socket.OnMessage = message => this.OnMessage?.Invoke(message);
-                socket.OnBinary = data => this.OnMessage?.Invoke(data.DecodeToString());
-                socket.OnError = ex => this.OnError?.Invoke(ex);
-                socket.OnClose = () => this.OnClose?.Invoke();
-            }
-
-            public override bool IsOpen()
-            {
-                return this._socket.IsAvailable;
-            }
-
-            public override async Task Close()
-            {
-                await Task.Run(() => this._socket.Close());
-            }
-
-            public override async Task SendMessage(string message)
-            {
-                if (message.Length <= MaxTextMessageLength)
+                // Since delegates are immutable, assign the delegate to a variable to make sure that the value doesn't change
+                // in the middle of the function (i.e. ensure thread-safety and avoid locking)
+                var onOpenFunc = this.OnOpen;
+                if (onOpenFunc == null)
                 {
-                    await this._socket.Send(message);
+                    throw new NullReferenceException($"The {nameof(OnOpen)}() callback must be set in order to accept connections");
                 }
-                else
-                {
-                    await this._socket.Send(message.Encode());
-                }
-            }
+
+                onOpenFunc(new FleckWebSocketConnection(socket), FleckWebSocketConnection.CreateConnectionInfo(socket));
+            };
         }
     }
 }
