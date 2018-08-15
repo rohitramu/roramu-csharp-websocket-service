@@ -48,7 +48,7 @@
                     throw new ArgumentNullException(nameof(message));
                 }
                 await this._proxyActions.SendMessage(message);
-                this.Logger?.Log(LogLevel.Debug, $"Sent message{messageIdLogString}", message);
+                this.Logger?.Log(LogLevel.Info, $"Sent message{messageIdLogString}", message);
             }
             catch (Exception ex)
             {
@@ -121,7 +121,7 @@
             try
             {
                 await this._proxyActions.Close();
-                this.Logger?.Log(LogLevel.Debug, $"Connection closed", this);
+                this.Logger?.Log(LogLevel.Info, $"Connection closed", this);
             }
             catch (Exception ex)
             {
@@ -152,7 +152,7 @@
 
         protected void OnOpenInternal()
         {
-            this.Logger?.Log(LogLevel.Debug, $"Connection opened", this);
+            this.Logger?.Log(LogLevel.Info, $"Connection opened", this);
             try
             {
                 this.OnOpen();
@@ -165,7 +165,7 @@
 
         protected void OnCloseInternal()
         {
-            this.Logger?.Log(LogLevel.Debug, $"Connection closed", this);
+            this.Logger?.Log(LogLevel.Info, $"Connection closed", this);
             try
             {
                 this.OnClose();
@@ -178,7 +178,7 @@
 
         protected void OnErrorInternal(Exception error)
         {
-            this.Logger?.Log(LogLevel.Error, $"Error in connection", error);
+            this.Logger?.Log(LogLevel.Info, $"Error in connection", error);
             try
             {
                 this.OnError(error);
@@ -191,7 +191,7 @@
 
         protected void OnMessageInternal(string stringMessage)
         {
-            this.Logger?.Log<string>(LogLevel.Debug, $"Message received", stringMessage);
+            this.Logger?.Log<string>(LogLevel.Info, $"Message received", stringMessage);
             Message message = null;
             try
             {

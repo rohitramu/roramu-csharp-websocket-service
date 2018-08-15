@@ -91,7 +91,7 @@
 
                 if (logLevel.HasValue)
                 {
-                    this.Logger?.Log(logLevel.Value, message, ex);
+                    this.Logger?.Log(logLevel.Value, $"[Fleck] {message}", ex);
                 }
             };
         }
@@ -135,7 +135,7 @@
 
                         // Start the server
                         this._server.Start(FleckServiceConfig);
-                        Logger?.Log(LogLevel.Info, $"Started server at '{this.Location}'");
+                        Logger?.Log(LogLevel.Warning, $"Started server at '{this.Location}'");
                     }
                     catch (Exception ex)
                     {

@@ -23,7 +23,7 @@
             try
             {
                 await this._socket.Connect();
-                this.Logger?.Log(LogLevel.Debug, $"Connected", this);
+                this.Logger?.Log(LogLevel.Info, $"Connected", this);
             }
             catch (Exception ex)
             {
