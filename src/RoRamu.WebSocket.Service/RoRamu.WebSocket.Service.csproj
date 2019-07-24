@@ -24,7 +24,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RoRamu.Utils" Version="*" />
+    <PackageReference Include="RoRamu.Utils" Version="1.0.26" />
   </ItemGroup>
 
   <ItemGroup>
