@@ -12,6 +12,26 @@
             WellKnownMessageTypes.Error,
         };
 
+        public static bool IsSuccessResponse(this Message message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            return message.Id != null && message.Type == WellKnownMessageTypes.Response;
+        }
+
+        public static bool IsErrorResponse(this Message message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            return message.Id != null && message.Type == WellKnownMessageTypes.Error;
+        }
+
         public static bool IsResponse(this Message message)
         {
             if (message == null)
@@ -20,6 +40,16 @@
             }
 
             return message.Id != null && ResponseMessageTypes.Contains(message.Type);
+        }
+
+        public static bool IsRequest(this Message message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            return message.Id != null && !message.IsResponse();
         }
 
         public static bool TryParseResponse(this Message message, out Response response)
@@ -45,6 +75,11 @@
                 response = null;
                 return false;
             }
+        }
+
+        public static Response CreateResponse(this Message message, object body, bool isErrorResponse = false)
+        {
+            return new Response(message.Id, body, isErrorResponse);
         }
     }
 }

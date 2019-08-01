@@ -10,7 +10,7 @@
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
         };
-        private static JsonSerializerSettings PrettyPringJsonSerializerSettings { get; } = new JsonSerializerSettings()
+        private static JsonSerializerSettings PrettyPrintJsonSerializerSettings { get; } = new JsonSerializerSettings()
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
             Formatting = Formatting.Indented,
@@ -37,7 +37,7 @@
             {
                 if (this._cache_pretty == null)
                 {
-                    this._cache_pretty = JsonConvert.SerializeObject(GetSerializableObject(), Message.PrettyPringJsonSerializerSettings);
+                    this._cache_pretty = JsonConvert.SerializeObject(GetSerializableObject(), Message.PrettyPrintJsonSerializerSettings);
                 }
 
                 return this._cache_pretty;
