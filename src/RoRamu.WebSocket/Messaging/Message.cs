@@ -2,6 +2,7 @@
 {
     using System;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using Newtonsoft.Json.Serialization;
 
     public class Message
@@ -19,14 +20,19 @@
         public string Id { get; }
 
         public string Type { get; }
-        
-        public object Body { get; }
+
+        internal JToken InternalJsonBody { get; }
 
         public Message(string id, string type, object body)
         {
             this.Id = id;
             this.Type = type ?? throw new ArgumentNullException(nameof(type));
-            this.Body = body;
+            this.InternalJsonBody = JToken.FromObject(body);
+        }
+
+        public T GetBody<T>()
+        {
+            return this.InternalJsonBody.ToObject<T>();
         }
 
         private string _cache = null;
@@ -69,7 +75,7 @@
             {
                 this.Id,
                 this.Type,
-                this.Body,
+                this.InternalJsonBody,
             };
         }
     }

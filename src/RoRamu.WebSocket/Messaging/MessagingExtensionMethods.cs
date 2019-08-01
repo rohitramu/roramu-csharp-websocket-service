@@ -65,7 +65,7 @@
                 // Create the response and return true
                 response = new Response(
                     message.Id,
-                    message.Body,
+                    message.InternalJsonBody,
                     message.Type == WellKnownMessageTypes.Error);
                 return true;
             }
