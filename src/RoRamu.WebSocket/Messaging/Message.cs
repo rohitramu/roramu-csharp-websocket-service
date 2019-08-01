@@ -21,25 +21,25 @@
 
         public string Type { get; }
 
-        internal JToken InternalJsonBody { get; }
+        internal JToken Body { get; }
 
         public Message(string id, string type, object body)
         {
             this.Id = id;
             this.Type = type ?? throw new ArgumentNullException(nameof(type));
-            this.InternalJsonBody = JToken.FromObject(body);
+            this.Body = JToken.FromObject(body);
         }
 
         public T GetBody<T>()
         {
-            return this.InternalJsonBody.ToObject<T>();
+            return this.Body.ToObject<T>();
         }
 
         public bool TryGetBody<T>(out T result)
         {
             try
             {
-                result = this.InternalJsonBody.ToObject<T>();
+                result = this.Body.ToObject<T>();
                 return true;
             }
             catch (JsonSerializationException e)
@@ -89,7 +89,7 @@
             {
                 this.Id,
                 this.Type,
-                this.InternalJsonBody,
+                this.Body,
             };
         }
     }
