@@ -35,6 +35,20 @@
             return this.InternalJsonBody.ToObject<T>();
         }
 
+        public bool TryGetBody<T>(out T result)
+        {
+            try
+            {
+                result = this.InternalJsonBody.ToObject<T>();
+                return true;
+            }
+            catch (JsonSerializationException e)
+            {
+                result = default(T);
+                return false;
+            }
+        }
+
         private string _cache = null;
         private string _cache_pretty = null;
         public string ToJsonString(bool prettyPrint = false)
