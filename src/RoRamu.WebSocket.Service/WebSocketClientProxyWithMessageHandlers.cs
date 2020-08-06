@@ -2,21 +2,27 @@ namespace RoRamu.WebSocket.Service
 {
     using System;
 
-    public class WebSocketClientProxyWithMessageHandlers : WebSocketClientProxy
+    public abstract class WebSocketClientProxyWithMessageHandlers : WebSocketClientProxy
     {
-        public IMessageHandlerCollection MessageHandlerCollection { get; }
+        private IMessageHandlerCollection MessageHandlers { get; }
 
         public WebSocketClientProxyWithMessageHandlers(
             string id,
-            WebSocketActions proxyActions,
-            IMessageHandlerCollection messageHandlerCollection) : base(id, proxyActions)
+            WebSocketActions proxyActions) : base(id, proxyActions)
         {
-            this.MessageHandlerCollection = messageHandlerCollection ?? throw new ArgumentNullException(nameof(messageHandlerCollection));
+            this.MessageHandlers = this.SetupMessageHandlers();
+
+            if (this.MessageHandlers == null)
+            {
+                throw new ArgumentNullException($"{nameof(SetupMessageHandlers)} must not return null.");
+            }
         }
+
+        public abstract IMessageHandlerCollection SetupMessageHandlers();
 
         internal new void OnMessage(Message message)
         {
-            this.MessageHandlerCollection.HandleMessage(message);
+            this.MessageHandlers.HandleMessage(message);
         }
     }
 }
