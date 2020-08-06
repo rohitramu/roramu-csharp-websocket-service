@@ -42,7 +42,7 @@
                 result = this.Body.ToObject<T>();
                 return true;
             }
-            catch (JsonSerializationException e)
+            catch (JsonSerializationException)
             {
                 result = default(T);
                 return false;

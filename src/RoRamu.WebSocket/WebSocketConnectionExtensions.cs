@@ -2,7 +2,7 @@
 {
     using System;
 
-    public static class WebSocketExtensionMethods
+    public static class WebSocketConnectionExtensions
     {
         public static WebSocketActions ToWebSocketActions(this WebSocketConnection connection)
         {
@@ -12,9 +12,9 @@
             }
 
             return new WebSocketActions(
-                isOpenFunc:         () => connection.IsOpen,
-                sendMessageFunc:    (message) => connection.SendMessage(message.ToJsonString()),
-                closeFunc:          () => connection.Close());
+                isOpenFunc: () => connection.IsOpen,
+                sendMessageFunc: (message) => connection.SendMessage(message.ToJsonString()),
+                closeFunc: () => connection.Close());
         }
     }
 }

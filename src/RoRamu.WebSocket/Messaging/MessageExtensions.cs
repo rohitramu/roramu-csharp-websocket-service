@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public static class MessagingExtensionMethods
+    public static class MessageExtensions
     {
         public static readonly IEnumerable<string> ResponseMessageTypes = new HashSet<string>()
         {
@@ -79,6 +79,11 @@
 
         public static Response CreateResponse(this Message message, object body, bool isErrorResponse = false)
         {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
             return new Response(message.Id, body, isErrorResponse);
         }
     }
