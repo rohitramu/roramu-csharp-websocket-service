@@ -43,6 +43,7 @@
         {
             return new WebSocketConnectionInfo(
                 $"{socket.ConnectionInfo.ClientIpAddress}:{socket.ConnectionInfo.ClientPort}",
+                socket.ConnectionInfo.Path,
                 socket.ConnectionInfo.Headers,
                 socket.ConnectionInfo.Cookies);
         }
