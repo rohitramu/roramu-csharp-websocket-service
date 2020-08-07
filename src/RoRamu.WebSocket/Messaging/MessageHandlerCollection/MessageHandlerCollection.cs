@@ -10,7 +10,7 @@ namespace RoRamu.WebSocket
         /// <summary>
         /// The default message handler to use if one hasn't been mapped for the provided message type.
         /// </summary>
-        public static MessageHandlerCollectionBuilder.HandlerDelegate DefaultFallbackMessageHandler = (message) =>
+        private static MessageHandlerCollectionBuilder.HandlerDelegate DefaultFallbackMessageHandler = (message) =>
         {
             throw new UnknownMessageTypeException(message.Type);
         };
@@ -31,7 +31,7 @@ namespace RoRamu.WebSocket
 
             if (!this.TryGetValue(message.Type, out MessageHandlerCollectionBuilder.HandlerDelegate handler))
             {
-                handler = DefaultFallbackMessageHandler;
+                handler = FallbackMessageHandler ?? DefaultFallbackMessageHandler;
             }
 
             handler(message);

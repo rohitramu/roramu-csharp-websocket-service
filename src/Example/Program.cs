@@ -117,19 +117,10 @@ namespace Test
             }
         }
 
-        private class TestClientProxy : WebSocketClientProxy
+        private class TestClientProxy : WebSocketClientProxyWithMessageHandlers
         {
             public TestClientProxy(string id, WebSocketActions proxyActions) : base(id, proxyActions)
             {
-            }
-
-            public override async void OnMessage(Message message)
-            {
-                await this.SendMessage(Response.Create(message, new
-                {
-                    ThisIs = "A response",
-                    RequestBody = message,
-                }));
             }
 
             public new async Task SendMessage(Message message)
@@ -140,6 +131,18 @@ namespace Test
             public new async Task<RequestResult> SendRequest(Request request, TimeSpan? requestTimeout = null)
             {
                 return await base.SendRequest(request);
+            }
+
+            public override IMessageHandlerCollection SetupMessageHandlers()
+            {
+                return MessageHandlerCollectionBuilder
+                    .Create()
+                    .SetDefaultHandler(async message => await this.SendMessage(message.CreateResponse(new
+                    {
+                        ThisIs = "A response",
+                        RequestBody = message,
+                    })))
+                    .Build();
             }
         }
     }

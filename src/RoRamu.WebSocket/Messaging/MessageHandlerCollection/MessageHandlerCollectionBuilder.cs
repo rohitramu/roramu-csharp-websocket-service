@@ -15,7 +15,7 @@ namespace RoRamu.WebSocket
             return new MessageHandlerCollectionBuilder();
         }
 
-        public MessageHandlerCollectionBuilder SetFallbackHandler(HandlerDelegate messageHandler)
+        public MessageHandlerCollectionBuilder SetDefaultHandler(HandlerDelegate messageHandler)
         {
             if (messageHandler == null)
             {
@@ -27,14 +27,14 @@ namespace RoRamu.WebSocket
             return this;
         }
 
-        public MessageHandlerCollectionBuilder RemoveFallbackHandler()
+        public MessageHandlerCollectionBuilder RemoveDefaultHandler()
         {
             this.MessageHandlerCollection.FallbackMessageHandler = null;
 
             return this;
         }
 
-        public MessageHandlerCollectionBuilder SetHandler(string messageType, HandlerDelegate messageHandler)
+        public MessageHandlerCollectionBuilder AddHandler(string messageType, HandlerDelegate messageHandler)
         {
             if (messageType == null)
             {

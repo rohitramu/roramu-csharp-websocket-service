@@ -20,7 +20,7 @@ namespace RoRamu.WebSocket.Service
 
         public abstract IMessageHandlerCollection SetupMessageHandlers();
 
-        internal new void OnMessage(Message message)
+        public sealed override void OnMessage(Message message)
         {
             this.MessageHandlers.HandleMessage(message);
         }
