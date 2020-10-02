@@ -4,9 +4,14 @@
 
     public class Response : Message
     {
-        public static string MessageType { get; } = WellKnownMessageTypes.Response;
+        public const string MessageType = WellKnownMessageTypes.Response;
 
-        public Response(string requestId, object body, bool isError = false) : base(requestId, isError ? ErrorResponse.MessageType : Response.MessageType, body)
+        public Response(string requestId, object body, bool isError = false) : base(
+            requestId,
+            isError
+                ? ErrorResponse.MessageType
+                : Response.MessageType,
+            body)
         {
         }
 

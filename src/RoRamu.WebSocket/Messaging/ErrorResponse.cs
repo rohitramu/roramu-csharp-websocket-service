@@ -16,7 +16,9 @@
             bool includeDebugInfo = false)
             : base(
                   requestId,
-                  new JRaw(error == null ? throw new ArgumentNullException(nameof(error)) : error.ToJsonString(includeDebugInfo)),
+                  new JRaw(error == null
+                    ? throw new ArgumentNullException(nameof(error))
+                    : error.ToJsonString(includeDebugInfo)),
                   true)
         {
         }
