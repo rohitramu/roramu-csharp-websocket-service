@@ -18,7 +18,7 @@
                   requestId,
                   new JRaw(error == null
                     ? throw new ArgumentNullException(nameof(error))
-                    : error.ToJsonString(includeDebugInfo)),
+                    : error.ToJsonString(includeExceptionType: true, includeStackTrace: includeDebugInfo)),
                   true)
         {
         }

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using RoRamu.Utils.Logging;
     using RoRamu.WebSocket.Server;
@@ -48,8 +49,10 @@
 
             Task.Run(() =>
             {
-                // Create and set the proxy for this connection
+                // Create the proxy for this connection
                 TClientProxy proxy = this.CreateProxy(socket, connectionInfo);
+
+                // Set the proxy for this connection
                 this._connections.AddOrUpdate(
                     key: proxy.Id,
                     addValue: proxy,
@@ -66,6 +69,19 @@
             }).ContinueWith(createProxyTask =>
             {
                 this.Logger?.Log(LogLevel.Error, "Failed to create client connection proxy", createProxyTask.Exception);
+
+                // Get the user-safe exceptions
+                IEnumerable<UserSafeWebSocketException> userSafeExceptions = createProxyTask?.Exception?.InnerExceptions
+                    ?.Where(e => e is UserSafeWebSocketException)
+                    ?.Select(e => e as UserSafeWebSocketException);
+
+                // Send the user-safe exceptions
+                if (userSafeExceptions != null && userSafeExceptions.Any())
+                {
+                    var errorMessage = new ErrorResponse(new AggregateException("Failed to connect", userSafeExceptions), requestId: null);
+                }
+
+                // Close the connection
                 socket.Close().ContinueWith(closeTask =>
                 {
                     this.Logger?.Log(LogLevel.Warning, $"Could not close the connection for which proxy creation failed", closeTask.Exception);
@@ -75,14 +91,8 @@
 
         private TClientProxy CreateProxy(WebSocketConnection socket, WebSocketConnectionInfo connectionInfo)
         {
-            // Create the proxy actions
-            WebSocketActions proxyActions = new WebSocketActions(
-                isOpenFunc:         () => socket.IsOpen,
-                sendMessageFunc:    (message) => socket.SendMessage(message.ToJsonString()),
-                closeFunc:          () => socket.Close());
-
             // Create the proxy
-            TClientProxy proxy = this.CreateProxy(connectionInfo, proxyActions);
+            TClientProxy proxy = this.CreateProxy(connectionInfo, socket.ToWebSocketActions());
 
             // Validate the proxy
             ValidateProxy(proxy, socket);
@@ -103,11 +113,11 @@
             string errorMessage = null;
             if (proxy == null)
             {
-                errorMessage = $"The {nameof(CreateProxy)}() method returned null in the '{this.GetType().FullName}' implementation";
+                errorMessage = $"The {nameof(CreateProxy)}() method returned null in the '{this.GetType().FullName}' implementation.";
             }
             else if (proxy.Id == null)
             {
-                errorMessage = $"The {nameof(CreateProxy)}() method returned a client proxy with a null {nameof(WebSocketClientProxy.Id)} in the '{this.GetType().FullName}' implementation";
+                errorMessage = $"The {nameof(CreateProxy)}() method returned a client proxy with a null {nameof(WebSocketClientProxy.Id)} in the '{this.GetType().FullName}' implementation.";
             }
 
             // Throw an exception if the proxy is invalid
@@ -119,13 +129,11 @@
                 }
                 finally
                 {
-                    throw new WebSocketProxyValidationFailure(proxy, errorMessage);
+                    throw new WebSocketProxyValidationException(proxy, errorMessage);
                 }
             }
         }
 
-        protected abstract TClientProxy CreateProxy(
-            WebSocketConnectionInfo connectionInfo,
-            WebSocketActions proxyActions);
+        protected abstract TClientProxy CreateProxy(WebSocketConnectionInfo connectionInfo, WebSocketActions proxyActions);
     }
 }

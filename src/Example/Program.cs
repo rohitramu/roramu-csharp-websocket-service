@@ -5,7 +5,8 @@ namespace Test
     using RoRamu.Utils.Logging;
     using RoRamu.WebSocket;
     using RoRamu.WebSocket.Client;
-    using RoRamu.WebSocket.Server;
+    using RoRamu.WebSocket.Client.WebSocket4Net;
+    using RoRamu.WebSocket.Server.Fleck;
     using RoRamu.WebSocket.Service;
 
     public class Program

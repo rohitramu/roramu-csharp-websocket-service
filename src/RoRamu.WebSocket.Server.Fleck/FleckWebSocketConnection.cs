@@ -1,4 +1,6 @@
-﻿namespace RoRamu.WebSocket.Server
+﻿using FleckImpl = Fleck;
+
+namespace RoRamu.WebSocket.Server.Fleck
 {
     using System;
     using System.Threading.Tasks;
@@ -10,9 +12,9 @@
 
         public override bool IsOpen => this._socket.IsAvailable;
 
-        private readonly Fleck.IWebSocketConnection _socket;
+        private readonly FleckImpl.IWebSocketConnection _socket;
 
-        public FleckWebSocketConnection(Fleck.IWebSocketConnection socket)
+        public FleckWebSocketConnection(FleckImpl.IWebSocketConnection socket)
         {
             this._socket = socket ?? throw new ArgumentNullException(nameof(socket));
 
@@ -39,7 +41,7 @@
             }
         }
 
-        public static WebSocketConnectionInfo CreateConnectionInfo(Fleck.IWebSocketConnection socket)
+        public static WebSocketConnectionInfo CreateConnectionInfo(FleckImpl.IWebSocketConnection socket)
         {
             return new WebSocketConnectionInfo(
                 $"{socket.ConnectionInfo.ClientIpAddress}:{socket.ConnectionInfo.ClientPort}",

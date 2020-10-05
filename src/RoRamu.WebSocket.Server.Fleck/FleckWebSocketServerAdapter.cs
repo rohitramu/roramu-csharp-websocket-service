@@ -1,4 +1,6 @@
-﻿namespace RoRamu.WebSocket.Server
+﻿using FleckImpl = Fleck;
+
+namespace RoRamu.WebSocket.Server.Fleck
 {
     using System;
     using System.Security.Cryptography.X509Certificates;
@@ -29,7 +31,7 @@
 
         private string Location => $"{this.WebSocketScheme}://0.0.0.0:{this.Port}";
 
-        private Fleck.WebSocketServer _server;
+        private FleckImpl.WebSocketServer _server;
 
         private readonly object _lock = new object();
 
@@ -70,18 +72,18 @@
             this.WebSocketScheme = this.IsSecure ? WebSocketSchemeSecured : WebSocketSchemeUnsecured;
 
             // Logging
-            Fleck.FleckLog.LogAction = (Fleck.LogLevel level, string message, Exception ex) =>
+            FleckImpl.FleckLog.LogAction = (FleckImpl.LogLevel level, string message, Exception ex) =>
             {
                 LogLevel? logLevel = null;
                 switch (level)
                 {
-                    case Fleck.LogLevel.Error:
+                    case FleckImpl.LogLevel.Error:
                         logLevel = LogLevel.Error;
                         break;
-                    case Fleck.LogLevel.Warn:
+                    case FleckImpl.LogLevel.Warn:
                         logLevel = LogLevel.Warning;
                         break;
-                    case Fleck.LogLevel.Info:
+                    case FleckImpl.LogLevel.Info:
                         //logLevel = LogLevel.Info;
                         break;
                     default:
@@ -125,7 +127,7 @@
                     try
                     {
                         // Create a new instance of the server
-                        this._server = new Fleck.WebSocketServer(this.Location);
+                        this._server = new FleckImpl.WebSocketServer(this.Location);
 
                         // Set the cert if required
                         if (this.Certificate != null)
@@ -192,7 +194,7 @@
             });
         }
 
-        private void FleckServiceConfig(Fleck.IWebSocketConnection socket)
+        private void FleckServiceConfig(FleckImpl.IWebSocketConnection socket)
         {
             // Throw an exception if the "OnOpen" method has not been defined, so that clients cannot connect without validation
             socket.OnOpen = () =>

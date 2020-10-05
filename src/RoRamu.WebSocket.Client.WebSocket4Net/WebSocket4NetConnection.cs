@@ -1,4 +1,6 @@
-﻿namespace RoRamu.WebSocket.Client
+﻿using WebSocket4NetImpl = WebSocket4Net;
+
+namespace RoRamu.WebSocket.Client.WebSocket4Net
 {
     using System;
     using System.Collections.Generic;
@@ -10,9 +12,9 @@
     {
         public const int MaxTextMessageLength = 1024 * 4;
 
-        public override bool IsOpen => this._socket.State == WebSocket4Net.WebSocketState.Open;
+        public override bool IsOpen => this._socket.State == WebSocket4NetImpl.WebSocketState.Open;
 
-        private readonly WebSocket4Net.WebSocket _socket;
+        private readonly WebSocket4NetImpl.WebSocket _socket;
 
         private static readonly ISet<string> WebSocketSchemes = new HashSet<string>() { "ws", "wss" };
         private static readonly string FormattedWebSocketSchemesList = string.Join(", ", WebSocketSchemes.Select(scheme => $"'{scheme}'"));
@@ -32,10 +34,10 @@
                 throw new ArgumentException($"The endpoint scheme must be one of the following: {FormattedWebSocketSchemesList}", nameof(connectionInfo));
             }
 
-            this._socket = new WebSocket4Net.WebSocket(
-                uri:                connectionInfo.RemoteEndpoint,
-                customHeaderItems:  new List<KeyValuePair<string, string>>(connectionInfo.Headers),
-                cookies:            new List<KeyValuePair<string, string>>(connectionInfo.Cookies));
+            this._socket = new WebSocket4NetImpl.WebSocket(
+                uri: connectionInfo.RemoteEndpoint,
+                customHeaderItems: new List<KeyValuePair<string, string>>(connectionInfo.Headers),
+                cookies: new List<KeyValuePair<string, string>>(connectionInfo.Cookies));
 
             this._socket.MessageReceived += (sender, messageArgs) => this.OnMessage?.Invoke(messageArgs.Message);
             this._socket.DataReceived += (sender, dataArgs) => this.OnMessage?.Invoke(dataArgs.Data.DecodeToString());
