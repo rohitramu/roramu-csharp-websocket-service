@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example", "src\Example\Example.csproj", "{ADE7F620-3230-4211-A063-0C60B28B3631}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example", "Example\Example.csproj", "{ADE7F620-3230-4211-A063-0C60B28B3631}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoRamu.WebSocket.Server", "src\RoRamu.WebSocket.Server\RoRamu.WebSocket.Server.csproj", "{F971E093-635E-4FCB-ACF1-A34313D35D92}"
 EndProject

@@ -2,21 +2,23 @@
 {
     using System;
 
-    public class WebSocketClientProxy : WebSocketConnectionProxy
+    /// <summary>
+    /// Represents the connection to a client.
+    /// </summary>
+    public sealed class WebSocketClientProxy : WebSocketConnectionProxy
     {
+        /// <summary>
+        /// The connection ID.
+        /// </summary>
         public string Id { get; }
 
-        public WebSocketClientProxy(string id, WebSocketActions proxyActions) : base(proxyActions)
+        internal WebSocketClientProxy(
+            string id,
+            WebSocketUnderlyingConnection connection,
+            WebSocketController.FactoryDelegate controllerFactory)
+            : base(connection, controllerFactory)
         {
             this.Id = id ?? throw new ArgumentNullException(nameof(id));
         }
-
-        internal new void OnOpenInternal() => base.OnOpenInternal();
-
-        internal new void OnCloseInternal() => base.OnCloseInternal();
-
-        internal new void OnErrorInternal(Exception error) => base.OnErrorInternal(error);
-
-        internal new void OnMessageInternal(string stringMessage) => base.OnMessageInternal(stringMessage);
     }
 }

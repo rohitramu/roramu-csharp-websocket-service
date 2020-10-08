@@ -2,6 +2,9 @@ namespace RoRamu.WebSocket
 {
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Interface for representing a collection of message handlers.
+    /// </summary>
     public interface IMessageHandlerCollection
     {
         /// <summary>

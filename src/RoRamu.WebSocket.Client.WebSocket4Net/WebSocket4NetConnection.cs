@@ -8,17 +8,32 @@ namespace RoRamu.WebSocket.Client.WebSocket4Net
     using System.Threading.Tasks;
     using RoRamu.Utils;
 
+    /// <summary>
+    /// An adapter for implementing a websocket client using the WebSocket4Net library:
+    /// <see href="https://github.com/kerryjiang/WebSocket4Net" />.
+    /// </summary>
     public class WebSocket4NetConnection : WebSocketClientConnection
     {
+        /// <summary>
+        /// The maximum size for a message sent as text (i.e. not as a byte stream).
+        /// </summary>
         public const int MaxTextMessageLength = 1024 * 4;
 
-        public override bool IsOpen => this._socket.State == WebSocket4NetImpl.WebSocketState.Open;
+        /// <summary>
+        /// Whether or not the connection to the server is open.
+        /// </summary>
+        /// <returns>True if the connection is open, otherwise false.</returns>
+        public override bool IsOpen() => this._socket.State == WebSocket4NetImpl.WebSocketState.Open;
 
         private readonly WebSocket4NetImpl.WebSocket _socket;
 
         private static readonly ISet<string> WebSocketSchemes = new HashSet<string>() { "ws", "wss" };
         private static readonly string FormattedWebSocketSchemesList = string.Join(", ", WebSocketSchemes.Select(scheme => $"'{scheme}'"));
 
+        /// <summary>
+        /// Creates a new <see cref="RoRamu.WebSocket.Client.WebSocket4Net.WebSocket4NetConnection" /> object.
+        /// </summary>
+        /// <param name="connectionInfo">Information about how to connect to the websocket server.</param>
         public WebSocket4NetConnection(WebSocketConnectionInfo connectionInfo)
         {
             if (connectionInfo == null)
@@ -46,11 +61,17 @@ namespace RoRamu.WebSocket.Client.WebSocket4Net
             this._socket.Opened += (sender, args) => this.OnOpen?.Invoke();
         }
 
+        /// <summary>
+        /// Opens a connection to the websocket server.
+        /// </summary>
         public override async Task Connect()
         {
             await this._socket.OpenAsync();
         }
 
+        /// <summary>
+        /// Closes the connection to the server if it is open, otherwise does nothing.
+        /// </summary>
         public override async Task Close()
         {
             await Task.Run(() =>
@@ -66,6 +87,10 @@ namespace RoRamu.WebSocket.Client.WebSocket4Net
             });
         }
 
+        /// <summary>
+        /// Sends a text message to the websocket server.
+        /// </summary>
+        /// <param name="message">The message to send.</param>
         public override Task SendMessage(string message)
         {
             return Task.Run(() =>

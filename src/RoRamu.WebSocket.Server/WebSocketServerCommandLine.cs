@@ -2,12 +2,27 @@
 {
     using System.Security.Cryptography.X509Certificates;
 
+    /// <summary>
+    /// A command line parser for getting parameters for starting a websocket server.
+    /// </summary>
     public sealed class WebSocketServerCommandLine
     {
-        public int? Port { get; set; } = null;
+        /// <summary>
+        /// The port to listen on.
+        /// </summary>
+        public int? Port { get; private set; } = null;
 
-        public X509Certificate2 Certificate { get; set; } = null;
+        /// <summary>
+        /// The SSL certificate to use when establishing connections.
+        /// </summary>
+        public X509Certificate2 Certificate { get; private set; } = null;
 
+        /// <summary>
+        /// Parses command line arguments to set the port and SSL certificate location when starting
+        /// the server.
+        /// </summary>
+        /// <param name="args">The command line arguments.</param>
+        /// <returns></returns>
         public static WebSocketServerCommandLine ParseCommandLineArgs(string[] args)
         {
             // Server port
