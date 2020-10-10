@@ -6,14 +6,24 @@
     using RoRamu.Utils;
     using RoRamu.Utils.Logging;
 
-    public abstract class WebSocketConnectionProxy
+    /// <summary>
+    /// Represents a websocket connection and exposes methods for interacting with it.
+    /// </summary>
+    public abstract class WebSocketConnectionProxy : IWebSocketConnection
     {
+        /// <summary>
+        /// The logger to be used.
+        /// Defaults to <see cref="RoRamu.Utils.Logging.Logger.Default" />.
+        /// If <c>null</c>, no logs will be emitted.
+        /// </summary>
+        public Logger Logger { get; set; } = Logger.Default;
+
         /// <summary>
         /// The default request timeout.  This is initialized to 1 minute.
         /// </summary>
-        public static TimeSpan DefaultRequestTimeout
+        public TimeSpan RequestTimeout
         {
-            get => _defaultRequestTimeout;
+            get => _requestTimeout;
             set
             {
                 if (value <= TimeSpan.Zero)
@@ -21,23 +31,43 @@
                     throw new ArgumentOutOfRangeException(nameof(value), value, "The default request timeout must be set to a positive value greater than zero");
                 }
 
-                _defaultRequestTimeout = value;
+                _requestTimeout = value;
             }
         }
-        private static TimeSpan _defaultRequestTimeout = TimeSpan.FromMinutes(1);
+        private TimeSpan _requestTimeout = TimeSpan.FromMinutes(1);
 
-        public Logger Logger { get; set; } = Logger.Default;
+        private readonly WebSocketUnderlyingConnection _connection;
 
-        private readonly WebSocketActions _proxyActions;
+        private readonly WebSocketController _controller;
 
         private event Action<Response> ReceivedResponse;
 
-        public WebSocketConnectionProxy(WebSocketActions proxyActions)
+        /// <summary>
+        /// Creates a new websocket connection proxy.
+        /// </summary>
+        /// <param name="connection">
+        /// The underlying websocket implementation's connection object.
+        /// </param>
+        /// <param name="controllerFactory">
+        /// A factory method which creates a controller containing the desired behavior for this connection.
+        /// </param>
+        public WebSocketConnectionProxy(WebSocketUnderlyingConnection connection, WebSocketController.FactoryDelegate controllerFactory)
         {
-            this._proxyActions = proxyActions ?? throw new ArgumentNullException(nameof(proxyActions));
+            this._connection = connection ?? throw new ArgumentNullException(nameof(connection));
+
+            if (controllerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(controllerFactory));
+            }
+            WebSocketController controller = controllerFactory(this);
+            this._controller = controller ?? throw new ArgumentNullException(nameof(controller));
         }
 
-        protected async Task SendMessage(Message message)
+        /// <summary>
+        /// Sends a message over the connection.
+        /// </summary>
+        /// <param name="message">The message to send.</param>
+        public async Task SendMessage(Message message)
         {
             string messageIdLogString = message.Id == null ? string.Empty : $" '{message.Id}'";
             this.Logger?.Log(LogLevel.Debug, $"Sending message{messageIdLogString}", message);
@@ -47,7 +77,7 @@
                 {
                     throw new ArgumentNullException(nameof(message));
                 }
-                await this._proxyActions.SendMessage(message);
+                await this._connection.SendMessage(message.ToJsonString());
                 this.Logger?.Log(LogLevel.Info, $"Sent message{messageIdLogString}", message);
             }
             catch (Exception ex)
@@ -59,10 +89,10 @@
         /// <summary>
         /// Sends a request and then waits for the given timeout for a response.  If the timeout is hit, this method will throw a <see cref="TimeoutException"/>.
         /// </summary>
-        /// <param name="request">The request to send</param>
-        /// <param name="timeout">The timeout to use for this request - leave as null to use the default timeout (<see cref="WebSocketConnectionProxy.DefaultRequestTimeout"/>)</param>
-        /// <returns>The response</returns>
-        protected async Task<RequestResult> SendRequest(Request request, TimeSpan? requestTimeout = null)
+        /// <param name="request">The request to send.</param>
+        /// <param name="requestTimeout">The timeout to use for this request - leave as null to use the default timeout (<see cref="WebSocketConnectionProxy.RequestTimeout"/>).</param>
+        /// <returns>The response.</returns>
+        public async Task<RequestResult> SendRequest(Request request, TimeSpan? requestTimeout = null)
         {
             if (request == null)
             {
@@ -70,7 +100,7 @@
             }
 
             // If a timeout isn't specified, use the current default
-            TimeSpan timeout = requestTimeout ?? WebSocketConnectionProxy.DefaultRequestTimeout;
+            TimeSpan timeout = requestTimeout ?? this.RequestTimeout;
 
             // Create a task completion source so that we can wait on the event to fire
             TaskCompletionSource<RequestResult> resultTaskContainer = new TaskCompletionSource<RequestResult>();
@@ -115,12 +145,15 @@
             }
         }
 
+        /// <summary>
+        /// Closes the connection.
+        /// </summary>
         public async Task Close()
         {
             this.Logger?.Log(LogLevel.Debug, $"Closing connection", this);
             try
             {
-                await this._proxyActions.Close();
+                await this._connection.Close();
                 this.Logger?.Log(LogLevel.Info, $"Connection closed", this);
             }
             catch (Exception ex)
@@ -129,11 +162,15 @@
             }
         }
 
+        /// <summary>
+        /// Whether or not the connection is open.
+        /// </summary>
+        /// <returns>True if the connection is open, otherwise false.</returns>
         public bool IsOpen()
         {
             try
             {
-                return this._proxyActions.IsOpen();
+                return this._connection.IsOpen();
             }
             catch (Exception ex)
             {
@@ -142,20 +179,12 @@
             }
         }
 
-        public virtual void OnOpen() { }
-
-        public virtual void OnClose() { }
-
-        public virtual void OnError(Exception error) { }
-
-        public virtual void OnMessage(Message message) { }
-
-        protected void OnOpenInternal()
+        internal void OnOpenInternal()
         {
             this.Logger?.Log(LogLevel.Info, $"Connection opened", this);
             try
             {
-                this.OnOpen();
+                this._controller.OnOpen();
             }
             catch (Exception ex)
             {
@@ -163,12 +192,12 @@
             }
         }
 
-        protected void OnCloseInternal()
+        internal void OnCloseInternal()
         {
             this.Logger?.Log(LogLevel.Info, $"Connection closed", this);
             try
             {
-                this.OnClose();
+                this._controller.OnClose();
             }
             catch (Exception ex)
             {
@@ -176,12 +205,12 @@
             }
         }
 
-        protected void OnErrorInternal(Exception error)
+        internal void OnErrorInternal(Exception error)
         {
             this.Logger?.Log(LogLevel.Info, $"Error in connection", error);
             try
             {
-                this.OnError(error);
+                this._controller.OnError(error);
             }
             catch (Exception ex)
             {
@@ -189,7 +218,7 @@
             }
         }
 
-        protected void OnMessageInternal(string stringMessage)
+        internal void OnMessageInternal(string stringMessage)
         {
             this.Logger?.Log<string>(LogLevel.Info, $"Message received", stringMessage);
             Message message = null;
@@ -202,7 +231,7 @@
                 }
                 else
                 {
-                    this.OnMessage(message);
+                    this._controller.OnMessage(message);
                 }
             }
             catch (Exception ex)
@@ -213,7 +242,7 @@
                 ErrorResponse errorResponse = new ErrorResponse(
                     error: ex,
                     requestId: messageId,
-                    includeDebugInfo: false);
+                    includeStackTrace: false);
 
                 this.SendMessage(errorResponse).ContinueWith(sendTask =>
                 {

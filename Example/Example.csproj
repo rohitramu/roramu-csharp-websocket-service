@@ -19,10 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RoRamu.WebSocket.Client.WebSocket4Net\RoRamu.WebSocket.Client.WebSocket4Net.csproj" />
-    <ProjectReference Include="..\RoRamu.WebSocket.Client\RoRamu.WebSocket.Client.csproj" />
-    <ProjectReference Include="..\RoRamu.WebSocket.Server.Fleck\RoRamu.WebSocket.Server.Fleck.csproj" />
-    <ProjectReference Include="..\RoRamu.WebSocket.Service\RoRamu.WebSocket.Service.csproj" />
+    <ProjectReference Include="..\src\RoRamu.WebSocket.Client.WebSocket4Net\RoRamu.WebSocket.Client.WebSocket4Net.csproj" />
+    <ProjectReference Include="..\src\RoRamu.WebSocket.Client\RoRamu.WebSocket.Client.csproj" />
+    <ProjectReference Include="..\src\RoRamu.WebSocket.Server.Fleck\RoRamu.WebSocket.Server.Fleck.csproj" />
+    <ProjectReference Include="..\src\RoRamu.WebSocket.Service\RoRamu.WebSocket.Service.csproj" />
   </ItemGroup>
 
 </Project>

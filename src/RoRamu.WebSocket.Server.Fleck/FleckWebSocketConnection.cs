@@ -6,11 +6,11 @@ namespace RoRamu.WebSocket.Server.Fleck
     using System.Threading.Tasks;
     using RoRamu.Utils;
 
-    internal class FleckWebSocketConnection : WebSocketConnection
+    internal class FleckWebSocketConnection : WebSocketUnderlyingConnection
     {
         public const int MaxTextMessageLength = 1024 * 4;
 
-        public override bool IsOpen => this._socket.IsAvailable;
+        public override bool IsOpen() => this._socket.IsAvailable;
 
         private readonly FleckImpl.IWebSocketConnection _socket;
 

@@ -7,24 +7,65 @@ namespace RoRamu.WebSocket.Server.Fleck
     using System.Threading.Tasks;
     using RoRamu.Utils.Logging;
 
+    /// <summary>
+    /// An adapter for a websocket server using the Fleck library:
+    /// https://github.com/statianzo/Fleck.
+    /// </summary>
     public sealed class FleckWebSocketServerAdapter : IWebSocketServer
     {
-        public Action<WebSocketConnection, WebSocketConnectionInfo> OnOpen { get; set; }
+        /// <summary>
+        /// A callback for when a connection is opened by a client.
+        /// </summary>
+        /// <value>The method to be called when a connection is opened by a client.</value>
+        public Action<WebSocketUnderlyingConnection, WebSocketConnectionInfo> OnOpen { get; set; }
 
+        /// <summary>
+        /// The default port to listen on when listening for secure (i.e. <c>wss://</c>) connections.
+        /// </summary>
         public const int DefaultPortSecured = 443;
+        /// <summary>
+        /// The default port to listen on when listening for unsecure (i.e. <c>ws://</c>) connections.
+        /// </summary>
         public const int DefaultPortUnsecured = 80;
 
+        /// <summary>
+        /// The scheme used when listening for secure connections.
+        /// </summary>
         public const string WebSocketSchemeSecured = "wss";
+        /// <summary>
+        /// The scheme used when listening for unsecure connections.
+        /// </summary>
         public const string WebSocketSchemeUnsecured = "ws";
 
+        /// <summary>
+        /// The logger to be used.
+        /// Defaults to <see cref="RoRamu.Utils.Logging.Logger.Default" />.
+        /// If <c>null</c>, no logs will be emitted.
+        /// </summary>
         public Logger Logger { get; set; } = Logger.Default;
 
+        /// <summary>
+        /// The port to listen on for new websocket connections.
+        /// If not provided, a default will be chosen based on the
+        /// <see cref="RoRamu.WebSocket.Server.Fleck.FleckWebSocketServerAdapter.IsSecure" />
+        /// property, which in turn depends on whether an SSL certificate was provided.
+        /// </summary>
         public int Port { get; }
 
+        /// <summary>
+        /// The SSL certificate to be used when listening for secure connections.
+        /// </summary>
         public X509Certificate2 Certificate { get; }
 
+        /// <summary>
+        /// Whether or not the server is listening for secure connections (i.e. whether it is using
+        /// SSL or not).
+        /// </summary>
         public bool IsSecure { get; }
 
+        /// <summary>
+        /// Whether or not the server is running.
+        /// </summary>
         public bool IsRunning => this._server != null;
 
         private string WebSocketScheme { get; }
@@ -35,6 +76,11 @@ namespace RoRamu.WebSocket.Server.Fleck
 
         private readonly object _lock = new object();
 
+        /// <summary>
+        /// Creates a new instance of a Fleck server which is wrapped in this adapter object.
+        /// </summary>
+        /// <param name="port">The port to listen on.</param>
+        /// <param name="certificate">The SSL certificate to use when establishing connections.</param>
         public FleckWebSocketServerAdapter(int? port = null, X509Certificate2 certificate = null)
         {
             if (port < 0)
@@ -98,6 +144,9 @@ namespace RoRamu.WebSocket.Server.Fleck
             };
         }
 
+        /// <summary>
+        /// Starts the server.
+        /// </summary>
         public async Task Start()
         {
             Logger?.Log(LogLevel.Debug, $"Starting server at '{this.Location}'");
@@ -155,6 +204,9 @@ namespace RoRamu.WebSocket.Server.Fleck
             });
         }
 
+        /// <summary>
+        /// Stops the server.
+        /// </summary>
         public async Task Stop()
         {
             Logger?.Log(LogLevel.Debug, $"Stopping server at '{this.Location}'");

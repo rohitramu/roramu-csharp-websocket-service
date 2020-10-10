@@ -1,12 +1,8 @@
 namespace Test
 {
     using System;
-    using System.Threading.Tasks;
     using RoRamu.Utils.Logging;
     using RoRamu.WebSocket;
-    using RoRamu.WebSocket.Client;
-    using RoRamu.WebSocket.Client.WebSocket4Net;
-    using RoRamu.WebSocket.Server.Fleck;
     using RoRamu.WebSocket.Service;
 
     public class Program
@@ -20,7 +16,6 @@ namespace Test
 
             var service = new TestService();
             service.Start().Wait();
-            TestClientProxy.DefaultRequestTimeout = TimeSpan.FromSeconds(5);
 
             TestClient client = new TestClient(new WebSocketConnectionInfo("ws://localhost:80"));
             client.Connect().Wait();
@@ -52,7 +47,7 @@ namespace Test
                     break;
                 }
 
-                foreach (TestClientProxy proxy in service.Connections.Values)
+                foreach (WebSocketClientProxy proxy in service.Connections.Values)
                 {
                     //var proxy = client;
                     Request request = new Request("test_request", new
@@ -85,66 +80,6 @@ namespace Test
 
             client.Close().Wait();
             service.Stop().Wait();
-        }
-
-        private class TestClient : WebSocketClient
-        {
-            public TestClient(WebSocketConnectionInfo connectionInfo) : base(new WebSocket4NetConnection(connectionInfo))
-            {
-            }
-
-            public new async Task SendMessage(Message message)
-            {
-                Logger?.Log(LogLevel.Info, $"Sending message", message);
-                await base.SendMessage(message);
-            }
-
-            public new async Task<RequestResult> SendRequest(Request request, TimeSpan? requestTimeout = null)
-            {
-                Logger?.Log(LogLevel.Info, $"Sending request '{request.Id}'", request);
-                return await base.SendRequest(request);
-            }
-        }
-
-        private class TestService : WebSocketService<TestClientProxy>
-        {
-            public TestService() : base(new FleckWebSocketServerAdapter())
-            {
-            }
-
-            protected override TestClientProxy CreateProxy(WebSocketConnectionInfo connectionInfo, WebSocketActions proxyActions)
-            {
-                return new TestClientProxy(Guid.NewGuid().ToString(), proxyActions);
-            }
-        }
-
-        private class TestClientProxy : WebSocketClientProxyWithMessageHandlers
-        {
-            public TestClientProxy(string id, WebSocketActions proxyActions) : base(id, proxyActions)
-            {
-            }
-
-            public new async Task SendMessage(Message message)
-            {
-                await base.SendMessage(message);
-            }
-
-            public new async Task<RequestResult> SendRequest(Request request, TimeSpan? requestTimeout = null)
-            {
-                return await base.SendRequest(request);
-            }
-
-            public override IMessageHandlerCollection SetupMessageHandlers()
-            {
-                return MessageHandlerCollectionBuilder
-                    .Create()
-                    .SetDefaultHandler(async message => await this.SendMessage(message.CreateResponse(new
-                    {
-                        ThisIs = "A response",
-                        RequestBody = message,
-                    })))
-                    .Build();
-            }
         }
     }
 }
