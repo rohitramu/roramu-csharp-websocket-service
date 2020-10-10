@@ -2,6 +2,9 @@ language: csharp
 solution: RoRamu.WebSocket.ServiceFramework.sln
 mono: none
 dotnet: 3.1.302
+branches:
+  only:
+    - master
 before_install:
   - NUGET_PACKAGE_VERSION="${TRAVIS_TAG:-0.0.0}"
   - echo "$NUGET_PACKAGE_VERSION"
