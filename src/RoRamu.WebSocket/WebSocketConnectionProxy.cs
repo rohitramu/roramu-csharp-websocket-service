@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using RoRamu.Utils;
     using RoRamu.Utils.Logging;
+    using RoRamu.Utils.Messaging;
 
     /// <summary>
     /// Represents a websocket connection and exposes methods for interacting with it.

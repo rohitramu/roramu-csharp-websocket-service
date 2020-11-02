@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using RoRamu.Utils.Logging;
+    using RoRamu.Utils.Messaging;
     using RoRamu.WebSocket.Server;
 
     /// <summary>

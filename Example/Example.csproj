@@ -5,17 +5,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DebugType>none</DebugType>
-    <DebugSymbols>false</DebugSymbols>
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="RoRamu.Utils" Version="1.0.28" />
+    <PackageReference Include="RoRamu.Utils" Version="$(NuGetVersion_RoRamu_Utils)" />
+    <PackageReference Include="RoRamu.Utils.Logging" Version="$(NuGetVersion_RoRamu_Utils)" />
+    <PackageReference Include="RoRamu.Utils.Messaging" Version="$(NuGetVersion_RoRamu_Utils)" />
   </ItemGroup>
 
   <ItemGroup>
