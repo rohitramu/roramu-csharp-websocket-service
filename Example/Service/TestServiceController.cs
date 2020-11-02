@@ -1,6 +1,7 @@
 namespace Test
 {
     using System;
+    using RoRamu.Utils.Messaging;
     using RoRamu.WebSocket;
     using RoRamu.WebSocket.Service;
 

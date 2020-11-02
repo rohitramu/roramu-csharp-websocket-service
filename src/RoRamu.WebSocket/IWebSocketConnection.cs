@@ -3,6 +3,7 @@ namespace RoRamu.WebSocket
     using System;
     using System.Threading.Tasks;
     using RoRamu.Utils.Logging;
+    using RoRamu.Utils.Messaging;
 
     /// <summary>
     /// Represents the actions available for interacting with a websocket connection.

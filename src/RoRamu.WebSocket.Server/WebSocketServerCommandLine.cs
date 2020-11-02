@@ -38,10 +38,9 @@
             {
                 string certLocation = args[1];
 
-                string password = null;
                 if (args.Length > 2)
                 {
-                    password = args[2];
+                    string password = args[2];
                     certificate = new X509Certificate2(certLocation, password);
                 }
                 else

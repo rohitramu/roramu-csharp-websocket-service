@@ -3,6 +3,7 @@ namespace Test
     using System;
     using System.Threading.Tasks;
     using RoRamu.Utils.Logging;
+    using RoRamu.Utils.Messaging;
     using RoRamu.WebSocket;
     using RoRamu.WebSocket.Client;
     using RoRamu.WebSocket.Client.WebSocket4Net;
@@ -27,7 +28,7 @@ namespace Test
         public new async Task<RequestResult> SendRequest(Request request, TimeSpan? requestTimeout = null)
         {
             Logger?.Log(LogLevel.Info, $"Sending request '{request.Id}'", request);
-            return await base.SendRequest(request);
+            return await base.SendRequest(request, requestTimeout);
         }
     }
 }

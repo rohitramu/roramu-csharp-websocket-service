@@ -1,6 +1,7 @@
 namespace RoRamu.WebSocket
 {
     using System;
+    using RoRamu.Utils.Messaging;
 
     /// <summary>
     /// The logic for interacting with a websocket connection.

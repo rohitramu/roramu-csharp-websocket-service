@@ -2,6 +2,7 @@ namespace Test
 {
     using System;
     using RoRamu.Utils.Logging;
+    using RoRamu.Utils.Messaging;
     using RoRamu.WebSocket;
     using RoRamu.WebSocket.Service;
 
@@ -9,7 +10,7 @@ namespace Test
     {
         private static readonly Logger Logger = Logger.Default;
 
-        static void Main(string[] args)
+        static void Main()
         {
             Logger.LogExtraInfo = true;
             Logger.LogLevel = LogLevel.Info;

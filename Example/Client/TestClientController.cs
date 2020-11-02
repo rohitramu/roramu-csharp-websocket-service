@@ -1,5 +1,6 @@
 namespace Test
 {
+    using RoRamu.Utils.Messaging;
     using RoRamu.WebSocket;
 
     public class TestClientController : WebSocketController
