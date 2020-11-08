@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RoRamu.Utils" Version="$(NuGetVersion_RoRamu_Utils)" />
-    <PackageReference Include="RoRamu.Utils.Logging" Version="$(NuGetVersion_RoRamu_Utils)" />
-    <PackageReference Include="RoRamu.Utils.Messaging" Version="$(NuGetVersion_RoRamu_Utils)" />
+    <PackageReference Include="RoRamu.Utils" />
+    <PackageReference Include="RoRamu.Utils.Logging" />
+    <PackageReference Include="RoRamu.Utils.Messaging" />
   </ItemGroup>
 
   <ItemGroup>

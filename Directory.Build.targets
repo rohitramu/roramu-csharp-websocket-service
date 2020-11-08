@@ -1,7 +1,4 @@
 <Project>
-
-    <PropertyGroup>
-        <NuGetVersion_RoRamu_Utils>1.0.29</NuGetVersion_RoRamu_Utils>
-    </PropertyGroup>
-
+    <Import Project="$(MSBuildThisFileDirectory)license.props" />
+    <Import Project="$(MSBuildThisFileDirectory)packages.props" />
 </Project>
