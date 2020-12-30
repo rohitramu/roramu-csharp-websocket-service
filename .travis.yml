@@ -1,21 +1,5 @@
-language: csharp
-solution: RoRamu.WebSocket.ServiceFramework.sln
-mono: none
-dotnet: 3.1.302
-branches:
-  only:
-    - master
-    - /^v[1-9][0.9]*\.[0-9]+\.[0-9]+(-[a-zA-Z][a-zA-Z]*)?$/
-before_install:
-  - NUGET_PACKAGE_VERSION_STRING="${TRAVIS_TAG:-v0.0.0}"
-  - NUGET_PACKAGE_VERSION_NUM="${NUGET_PACKAGE_VERSION_STRING:1}"
-  - echo "NuGet version = $NUGET_PACKAGE_VERSION_STRING"
-script:
-  - dotnet build $TRAVIS_SOLUTION --configuration $CONFIGURATION --source $NUGET_SOURCE_PULL /p:Version=$NUGET_PACKAGE_VERSION_NUM
-deploy:
-  skip_cleanup: true
-  provider: script
-  script: |-
-    find -name '*.nupkg' | xargs -i dotnet nuget push {} --api-key $NUGET_API_KEY --source $NUGET_SOURCE_PUSH
-  on:
-    tags: true
+import:
+  - rohitramu/roramu-travis-shared:csharp.yml@master
+  - rohitramu/roramu-travis-shared:csharp_deploy_nuget.yml@master
+
+solution: RoRamu.WebSocket.Service.sln
