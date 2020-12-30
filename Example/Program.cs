@@ -8,7 +8,7 @@ namespace Test
 
     public class Program
     {
-        private static readonly Logger Logger = Logger.Default;
+        private static readonly ConsoleLogger Logger = RoRamu.Utils.Logging.Logger.Default;
 
         static void Main()
         {
