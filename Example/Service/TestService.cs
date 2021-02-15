@@ -11,11 +11,6 @@ namespace Test
         {
         }
 
-        protected override string GenerateConnectionId(WebSocketConnectionInfo connectionInfo)
-        {
-            return Guid.NewGuid().ToString();
-        }
-
         protected override TestServiceController CreateController(
             string connectionId,
             WebSocketConnectionInfo connectionInfo,

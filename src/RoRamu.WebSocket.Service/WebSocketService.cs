@@ -177,7 +177,10 @@
         /// </summary>
         /// <param name="connectionInfo">Information about the connection.</param>
         /// <returns>A connection ID.</returns>
-        protected abstract string GenerateConnectionId(WebSocketConnectionInfo connectionInfo);
+        protected virtual string GenerateConnectionId(WebSocketConnectionInfo connectionInfo)
+        {
+            return Guid.NewGuid().ToString();
+        }
 
         /// <summary>
         /// Creates a new instance of a controller, which defines the behavior of the service for a connection.
