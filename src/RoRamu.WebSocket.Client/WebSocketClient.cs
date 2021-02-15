@@ -7,7 +7,7 @@
     /// <summary>
     /// A websocket client.
     /// </summary>
-    public abstract class WebSocketClient : WebSocketConnectionProxy
+    public class WebSocketClient : WebSocketConnectionProxy
     {
         /// <summary>
         /// The underlying websocket client implementation's connection object.
@@ -20,12 +20,12 @@
         /// <param name="connection">The connection to be made to the websocket server.</param>
         /// <param name="controllerFactory">
         /// A factory method that creates a controller which implements the client's behavior.
+        /// If this is null, a default no-op controller will be used.
         /// </param>
-        /// <returns></returns>
         public WebSocketClient(
             WebSocketClientConnection connection,
-            WebSocketController.FactoryDelegate controllerFactory)
-            : base(connection, controllerFactory)
+            WebSocketController.FactoryDelegate controllerFactory = null)
+            : base(connection, controllerFactory ?? DefaultControllerFactory)
         {
             this._socket = connection;
             this._socket.OnOpen = this.OnOpenInternal;
@@ -49,6 +49,11 @@
             {
                 this.Logger?.Log(LogLevel.Warning, $"Failed to connect", ex);
             }
+        }
+
+        private static WebSocketController DefaultControllerFactory(IWebSocketConnection connection)
+        {
+            return new NoOpWebSocketController(connection);
         }
     }
 }
