@@ -19,7 +19,6 @@ namespace RoRamu.WebSocket.Service
         /// <param name="webSocketConnection">
         /// The actions available for interacting with this websocket connection.
         /// </param>
-        /// <returns></returns>
         public WebSocketServiceController(string connectionId, IWebSocketConnection webSocketConnection) : base(webSocketConnection)
         {
             this.ConnectionId = connectionId ?? throw new ArgumentNullException(nameof(connectionId));

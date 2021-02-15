@@ -1,6 +1,5 @@
 namespace Test
 {
-    using System;
     using RoRamu.WebSocket;
     using RoRamu.WebSocket.Service;
     using RoRamu.WebSocket.Server.Fleck;
