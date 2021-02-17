@@ -20,7 +20,7 @@
         /// <summary>
         /// The cookies provided during the initial handshake request.
         /// </summary>
-        /// <value></value>
+        ///TODO: Use the System.Net.Cookie class as the value
         public IReadOnlyCollection<KeyValuePair<string, string>> Cookies { get; }
 
         /// <summary>

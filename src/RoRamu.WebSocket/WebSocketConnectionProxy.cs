@@ -64,10 +64,7 @@
             this._controller = controller ?? throw new ArgumentNullException(nameof(controller));
         }
 
-        /// <summary>
-        /// Sends a message over the connection.
-        /// </summary>
-        /// <param name="message">The message to send.</param>
+        /// <inheritdoc />
         public async Task SendMessage(Message message)
         {
             string messageIdLogString = message.Id == null ? string.Empty : $" '{message.Id}'";
@@ -87,12 +84,7 @@
             }
         }
 
-        /// <summary>
-        /// Sends a request and then waits for the given timeout for a response.  If the timeout is hit, this method will throw a <see cref="TimeoutException"/>.
-        /// </summary>
-        /// <param name="request">The request to send.</param>
-        /// <param name="requestTimeout">The timeout to use for this request - leave as null to use the default timeout (<see cref="WebSocketConnectionProxy.RequestTimeout"/>).</param>
-        /// <returns>The response.</returns>
+        /// <inheritdoc />
         public async Task<RequestResult> SendRequest(Request request, TimeSpan? requestTimeout = null)
         {
             if (request == null)
@@ -146,9 +138,21 @@
             }
         }
 
-        /// <summary>
-        /// Closes the connection.
-        /// </summary>
+        /// <inheritdoc />
+        public bool IsOpen()
+        {
+            try
+            {
+                return this._connection.IsOpen();
+            }
+            catch (Exception ex)
+            {
+                this.Logger?.Log(LogLevel.Error, $"Failed to determine whether the connection is open", ex);
+                return false;
+            }
+        }
+
+        /// <inheritdoc />
         public async Task Close()
         {
             this.Logger?.Log(LogLevel.Debug, $"Closing connection", this);
@@ -160,23 +164,6 @@
             catch (Exception ex)
             {
                 this.Logger?.Log(LogLevel.Warning, $"Failed to gracefully close connection", ex);
-            }
-        }
-
-        /// <summary>
-        /// Whether or not the connection is open.
-        /// </summary>
-        /// <returns>True if the connection is open, otherwise false.</returns>
-        public bool IsOpen()
-        {
-            try
-            {
-                return this._connection.IsOpen();
-            }
-            catch (Exception ex)
-            {
-                this.Logger?.Log(LogLevel.Error, $"Failed to determine whether the connection is open", ex);
-                return false;
             }
         }
 

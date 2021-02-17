@@ -18,7 +18,6 @@ namespace RoRamu.WebSocket
         /// <summary>
         /// The timeout for requests.
         /// </summary>
-        /// <value></value>
         TimeSpan RequestTimeout { get; set; }
 
         /// <summary>
@@ -28,11 +27,11 @@ namespace RoRamu.WebSocket
         Task SendMessage(Message message);
 
         /// <summary>
-        /// Sends a request and waits for the response.
+        /// Sends a request and then waits for the given timeout for a response.  If the timeout is hit, this method will throw a <see cref="TimeoutException"/>.
         /// </summary>
-        /// <param name="request">The request message to send.</param>
-        /// <param name="requestTimeout">How long to wait for a response before timing out.</param>
-        /// <returns>The result of the operation.</returns>
+        /// <param name="request">The request to send.</param>
+        /// <param name="requestTimeout">The timeout to use for this request - leave as null to use the default timeout (<see cref="WebSocketConnectionProxy.RequestTimeout"/>).</param>
+        /// <returns>The response.</returns>
         Task<RequestResult> SendRequest(Request request, TimeSpan? requestTimeout = null);
 
         /// <summary>
