@@ -22,9 +22,14 @@
         /// A factory method that creates a controller which implements the client's behavior.
         /// If this is null, a default no-op controller will be used.
         /// </param>
+        /// <param name="autoConnect">
+        /// Connects to the server immediately if true, otherwise the <see cref="Connect" /> method
+        /// must be called to connect this client to the server.
+        /// </param>
         public WebSocketClient(
             WebSocketClientConnection connection,
-            WebSocketController.FactoryDelegate controllerFactory = null)
+            WebSocketController.FactoryDelegate controllerFactory = null,
+            bool autoConnect = true)
             : base(connection, controllerFactory ?? DefaultControllerFactory)
         {
             this._socket = connection;
@@ -32,13 +37,17 @@
             this._socket.OnClose = this.OnCloseInternal;
             this._socket.OnError = this.OnErrorInternal;
             this._socket.OnMessage = this.OnMessageInternal;
+
+            if (autoConnect)
+            {
+                this.Connect().GetAwaiter().GetResult();
+            }
         }
 
         /// <summary>
         /// Connects to the websocket server (specified in the constructor).
         /// </summary>
-        /// <returns>This object so calls can be chained.</returns>
-        public async Task<WebSocketClient> Connect()
+        public async Task Connect()
         {
             this.Logger?.Log(LogLevel.Debug, $"Connecting", this);
             try
@@ -50,9 +59,6 @@
             {
                 this.Logger?.Log(LogLevel.Warning, $"Failed to connect", ex);
             }
-
-            // Return his object so calls can be chained
-            return this;
         }
 
         private static WebSocketController DefaultControllerFactory(IWebSocketConnection connection)
