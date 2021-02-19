@@ -147,7 +147,7 @@ namespace RoRamu.WebSocket.Server.Fleck
         /// <summary>
         /// Starts the server.
         /// </summary>
-        public async Task Start()
+        public async Task<IWebSocketServer> Start()
         {
             Logger?.Log(LogLevel.Debug, $"Starting server at '{this.Location}'");
 
@@ -157,11 +157,13 @@ namespace RoRamu.WebSocket.Server.Fleck
             if (this.IsRunning)
             {
                 Logger?.Log(LogLevel.Debug, alreadyStartedMessage);
-                return;
+
+                // Return this object so calls can be chained
+                return this;
             }
 
             // Start the server in a new thread
-            await Task.Run(() =>
+            return await Task.Run<IWebSocketServer>(() =>
             {
                 lock (this._lock)
                 {
@@ -169,7 +171,7 @@ namespace RoRamu.WebSocket.Server.Fleck
                     if (this.IsRunning)
                     {
                         Logger?.Log(LogLevel.Debug, alreadyStartedMessage);
-                        return;
+                        return this;
                     }
 
                     // Try to start the server
@@ -200,6 +202,9 @@ namespace RoRamu.WebSocket.Server.Fleck
                             Logger?.Log(LogLevel.Error, $"Failed to start server at '{this.Location}'", ex);
                         }
                     }
+
+                    // Return this object so calls can be chained
+                    return this;
                 }
             });
         }
@@ -207,7 +212,7 @@ namespace RoRamu.WebSocket.Server.Fleck
         /// <summary>
         /// Stops the server.
         /// </summary>
-        public async Task Stop()
+        public async Task<IWebSocketServer> Stop()
         {
             Logger?.Log(LogLevel.Debug, $"Stopping server at '{this.Location}'");
 
@@ -217,11 +222,11 @@ namespace RoRamu.WebSocket.Server.Fleck
             if (!this.IsRunning)
             {
                 Logger?.Log(LogLevel.Debug, alreadyStoppedMessage);
-                return;
+                return this;
             }
 
             // Stop the server in a new thread
-            await Task.Run(() =>
+            return await Task.Run<IWebSocketServer>(() =>
             {
                 lock (this._lock)
                 {
@@ -229,7 +234,7 @@ namespace RoRamu.WebSocket.Server.Fleck
                     if (!this.IsRunning)
                     {
                         Logger?.Log(LogLevel.Debug, alreadyStoppedMessage);
-                        return;
+                        return this;
                     }
 
                     // Try to stop the server
@@ -242,6 +247,9 @@ namespace RoRamu.WebSocket.Server.Fleck
                     {
                         Logger?.Log(LogLevel.Error, $"Failed to stop server at '{this.Location}'", ex);
                     }
+
+                    // Return this object so calls can be chained
+                    return this;
                 }
             });
         }

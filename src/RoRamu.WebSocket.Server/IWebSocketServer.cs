@@ -22,12 +22,14 @@
         /// Once the task completes, the server should be running (i.e. listening for new websocket
         /// connections on a port).
         /// </summary>
-        Task Start();
+        /// <returns>This object so calls can be chained.</returns>
+        Task<IWebSocketServer> Start();
 
         /// <summary>
         /// Stops the websocket server.
         /// Once the task completes, the server should be stopped.
         /// </summary>
-        Task Stop();
+        /// <returns>This object so calls can be chained.</returns>
+        Task<IWebSocketServer> Stop();
     }
 }

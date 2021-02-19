@@ -37,7 +37,8 @@
         /// <summary>
         /// Connects to the websocket server (specified in the constructor).
         /// </summary>
-        public async Task Connect()
+        /// <returns>This object so calls can be chained.</returns>
+        public async Task<WebSocketClient> Connect()
         {
             this.Logger?.Log(LogLevel.Debug, $"Connecting", this);
             try
@@ -49,6 +50,9 @@
             {
                 this.Logger?.Log(LogLevel.Warning, $"Failed to connect", ex);
             }
+
+            // Return his object so calls can be chained
+            return this;
         }
 
         private static WebSocketController DefaultControllerFactory(IWebSocketConnection connection)
