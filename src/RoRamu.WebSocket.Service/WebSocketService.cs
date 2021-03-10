@@ -82,10 +82,10 @@
                 throw new ArgumentNullException(nameof(connectionInfo));
             }
 
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 // Create the proxy for this connection
-                WebSocketClientProxy proxy = this.CreateProxy(socket, connectionInfo);
+                WebSocketClientProxy proxy = await this.CreateProxy(socket, connectionInfo);
 
                 // Set the proxy for this connection
                 this._connections.AddOrUpdate(
@@ -141,7 +141,7 @@
         /// <returns>
         /// The new <see cref="RoRamu.WebSocket.WebSocketUnderlyingConnection" /> representing the connection.
         /// </returns>
-        private WebSocketClientProxy CreateProxy(WebSocketUnderlyingConnection socket, WebSocketConnectionInfo connectionInfo)
+        private async Task<WebSocketClientProxy> CreateProxy(WebSocketUnderlyingConnection socket, WebSocketConnectionInfo connectionInfo)
         {
             // Generate the connection ID
             string connectionId;
@@ -167,7 +167,7 @@
             socket.OnMessage = proxy.OnMessageInternal;
 
             // Run the "OnOpen()" method
-            proxy.OnOpenInternal();
+            await proxy.OnOpenInternal();
 
             return proxy;
         }
