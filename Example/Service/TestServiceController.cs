@@ -1,6 +1,7 @@
 namespace Test
 {
     using System;
+    using System.Threading.Tasks;
     using RoRamu.Utils.Messaging;
     using RoRamu.WebSocket;
     using RoRamu.WebSocket.Service;
@@ -17,6 +18,7 @@ namespace Test
                 .Create()
                 .SetHandler("echo", async message => await this.Connection.SendMessage(message.CreateResponse(message.GetBody<object>())))
                 .SetHandler("id", async message => await this.Connection.SendMessage(message.CreateResponse(id)))
+                .SetHandler("Exception", (m) => throw new Exception($"You asked me to throw an exception:\n{m}"))
                 .SetDefaultHandler(async message => await this.Connection.SendMessage(message.CreateResponse(new
                 {
                     ThisIs = "A response",
@@ -25,9 +27,9 @@ namespace Test
                 .Build();
         }
 
-        public override void OnMessage(Message message)
+        public override async Task OnMessage(Message message)
         {
-            this.MessageHandlerCollection.HandleMessage(message);
+            await this.MessageHandlerCollection.HandleMessage(message);
         }
     }
 }

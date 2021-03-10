@@ -1,5 +1,7 @@
 namespace Test
 {
+    using System;
+    using System.Threading.Tasks;
     using RoRamu.Utils.Messaging;
     using RoRamu.WebSocket;
 
@@ -14,9 +16,9 @@ namespace Test
                 .Build();
         }
 
-        public override void OnMessage(Message message)
+        public override async Task OnMessage(Message message)
         {
-            this.Handlers.HandleMessage(message);
+            await this.Handlers.HandleMessage(message);
         }
     }
 }

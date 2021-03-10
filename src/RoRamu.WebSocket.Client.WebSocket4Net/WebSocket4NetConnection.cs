@@ -54,11 +54,11 @@ namespace RoRamu.WebSocket.Client.WebSocket4Net
                 customHeaderItems: new List<KeyValuePair<string, string>>(connectionInfo.Headers),
                 cookies: new List<KeyValuePair<string, string>>(connectionInfo.Cookies));
 
-            this._socket.MessageReceived += (sender, messageArgs) => this.OnMessage?.Invoke(messageArgs.Message);
-            this._socket.DataReceived += (sender, dataArgs) => this.OnMessage?.Invoke(dataArgs.Data.DecodeToString());
-            this._socket.Error += (sender, errorArgs) => this.OnError?.Invoke(errorArgs.Exception);
-            this._socket.Closed += (sender, args) => this.OnClose?.Invoke();
-            this._socket.Opened += (sender, args) => this.OnOpen?.Invoke();
+            this._socket.MessageReceived += async (sender, messageArgs) => await this.OnMessage?.Invoke(messageArgs.Message);
+            this._socket.DataReceived += async (sender, dataArgs) => await this.OnMessage?.Invoke(dataArgs.Data.DecodeToString());
+            this._socket.Error += async (sender, errorArgs) => await this.OnError?.Invoke(errorArgs.Exception);
+            this._socket.Closed += async (sender, args) => await this.OnClose?.Invoke();
+            this._socket.Opened += async (sender, args) => await this.OnOpen?.Invoke();
         }
 
         /// <summary>

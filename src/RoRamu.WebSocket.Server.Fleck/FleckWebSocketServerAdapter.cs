@@ -83,7 +83,7 @@ namespace RoRamu.WebSocket.Server.Fleck
         /// <param name="certificate">The SSL certificate to use when establishing connections.</param>
         public FleckWebSocketServerAdapter(int? port = null, X509Certificate2 certificate = null)
         {
-            if (port < 0)
+            if (port.HasValue && port < 0)
             {
                 throw new ArgumentException("Port cannot be negative", nameof(port));
             }

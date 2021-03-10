@@ -167,12 +167,12 @@
             }
         }
 
-        internal void OnOpenInternal()
+        internal async Task OnOpenInternal()
         {
             this.Logger?.Log(LogLevel.Info, $"Connection opened", this);
             try
             {
-                this._controller.OnOpen();
+                await this._controller.OnOpen();
             }
             catch (Exception ex)
             {
@@ -180,12 +180,12 @@
             }
         }
 
-        internal void OnCloseInternal()
+        internal async Task OnCloseInternal()
         {
             this.Logger?.Log(LogLevel.Info, $"Connection closed", this);
             try
             {
-                this._controller.OnClose();
+                await this._controller.OnClose();
             }
             catch (Exception ex)
             {
@@ -193,12 +193,12 @@
             }
         }
 
-        internal void OnErrorInternal(Exception error)
+        internal async Task OnErrorInternal(Exception error)
         {
             this.Logger?.Log(LogLevel.Info, $"Error in connection", error);
             try
             {
-                this._controller.OnError(error);
+                await this._controller.OnError(error);
             }
             catch (Exception ex)
             {
@@ -206,7 +206,7 @@
             }
         }
 
-        internal void OnMessageInternal(string stringMessage)
+        internal async Task OnMessageInternal(string stringMessage)
         {
             this.Logger?.Log<string>(LogLevel.Info, $"Message received", stringMessage);
             Message message = null;
@@ -219,7 +219,7 @@
                 }
                 else
                 {
-                    this._controller.OnMessage(message);
+                    await this._controller.OnMessage(message);
                 }
             }
             catch (Exception ex)
@@ -232,7 +232,7 @@
                     requestId: messageId,
                     includeStackTrace: false);
 
-                this.SendMessage(errorResponse).ContinueWith(sendTask =>
+                await this.SendMessage(errorResponse).ContinueWith(sendTask =>
                 {
                     this.Logger?.Log(LogLevel.Warning, $"Failed to send error", sendTask.Exception);
                 }, TaskContinuationOptions.OnlyOnFaulted);

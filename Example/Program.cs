@@ -18,6 +18,8 @@ namespace Test
             var service = new TestService();
             service.Start().Wait();
 
+            // Console.ReadLine();
+
             TestClient client = new TestClient(new WebSocketConnectionInfo("ws://localhost:80"));
             client.Connect().Wait();
             client.SendRequest(new Request("test", "this is a test"), TimeSpan.FromSeconds(10)).ContinueWith(requestTask =>

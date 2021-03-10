@@ -12,7 +12,7 @@
         /// A callback for when the connection is opened.
         /// </summary>
         /// <value>The method to be called when the connection is opened.</value>
-        public Action OnOpen { get; set; }
+        public Func<Task> OnOpen { get; set; }
 
         /// <summary>
         /// Connects to the websocket server.

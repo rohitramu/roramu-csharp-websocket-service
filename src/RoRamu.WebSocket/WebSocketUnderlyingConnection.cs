@@ -11,18 +11,18 @@
         /// <summary>
         /// The callback for when the connection is closed.
         /// </summary>
-        public Action OnClose { get; internal set; }
+        public Func<Task> OnClose { get; internal set; }
 
         /// <summary>
         /// The callback for when there is an error in the websocket connection.  The
         /// connection will most likely be already closed or closing soon.
         /// </summary>
-        public Action<Exception> OnError { get; internal set; }
+        public Func<Exception, Task> OnError { get; internal set; }
 
         /// <summary>
         /// The callback for when a message is received on the connection.
         /// </summary>
-        public Action<string> OnMessage { get; internal set; }
+        public Func<string, Task> OnMessage { get; internal set; }
 
         /// <summary>
         /// Whether or not the connection is open.

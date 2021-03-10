@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using RoRamu.Utils.Messaging;
 
 namespace RoRamu.WebSocket
@@ -19,9 +20,11 @@ namespace RoRamu.WebSocket
         /// Triggered when a message is received, but does nothing.
         /// </summary>
         /// <param name="message">The received message.</param>
-        public override void OnMessage(Message message)
+        public override Task OnMessage(Message message)
         {
             //TODO: log
+
+            return Task.CompletedTask;
         }
     }
 }
