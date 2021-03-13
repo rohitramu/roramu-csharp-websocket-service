@@ -70,25 +70,27 @@ namespace Test
 
         private static async Task PreTest(TestClient client)
         {
-            RequestResult result;
-
-            result = await client.SendRequest(new Request("test", "this is a test"), TimeSpan.FromSeconds(10));
-            if (!result.IsSuccessful)
-            {
-                throw result.Exception;
-            }
-
-            try
-            {
-                result = await client.SendRequest(new Request("Exception", null), TimeSpan.FromSeconds(10));
+            { // Simple test
+                RequestResult result = await client.SendRequest(new Request("test", "this is a test"), TimeSpan.FromSeconds(10));
                 if (!result.IsSuccessful)
                 {
                     throw result.Exception;
                 }
             }
-            catch (ErrorResponseException ex)
-            {
-                Logger?.Log(LogLevel.Info, "Received expected exception.", ex.ErrorInfo);
+
+            { // Make sure exceptions are thrown correctly
+                try
+                {
+                    RequestResult result = await client.SendRequest(new Request("Exception", null), TimeSpan.FromSeconds(10));
+                    if (!result.IsSuccessful)
+                    {
+                        throw result.Exception;
+                    }
+                }
+                catch (ErrorResponseException ex)
+                {
+                    Logger?.Log(LogLevel.Info, "Received expected exception.", ex.ErrorInfo);
+                }
             }
         }
     }

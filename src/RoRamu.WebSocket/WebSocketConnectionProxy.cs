@@ -101,6 +101,8 @@
             // Create a cancellation token source so that we can enforce a timeout
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(timeout);
 
+            //TODO: Trigger the cancellation token if/when the connection closes
+
             // Register a callback with the cancellation token to cancel the waiting task on a timeout
             cancellationTokenSource.Token.Register(
                 () => resultTaskContainer.TrySetException(new TimeoutException($"No response received for request '{request.Id}' after waiting for {timeout.ToFormattedString()}")),
