@@ -50,6 +50,12 @@
         public async Task Connect()
         {
             this.Logger?.Log(LogLevel.Debug, $"Connecting", this);
+            if (this.IsOpen())
+            {
+                this.Logger?.Log(LogLevel.Debug, $"Connection already open", this);
+                return;
+            }
+
             try
             {
                 await this._socket.Connect();

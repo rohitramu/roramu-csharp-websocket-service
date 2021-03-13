@@ -1,6 +1,7 @@
 namespace Test
 {
     using System;
+    using System.Threading.Tasks;
     using RoRamu.Utils.Logging;
     using RoRamu.Utils.Messaging;
     using RoRamu.WebSocket;
@@ -21,26 +22,8 @@ namespace Test
             // Console.ReadLine();
 
             TestClient client = new TestClient(new WebSocketConnectionInfo("ws://localhost:80"));
-            client.Connect().Wait();
-            client.SendRequest(new Request("test", "this is a test"), TimeSpan.FromSeconds(10)).ContinueWith(requestTask =>
-            {
-                if (requestTask.IsFaulted)
-                {
-                    Logger?.Log(LogLevel.Error, "Failed to send test request", requestTask.Exception);
-                }
-                else
-                {
-                    RequestResult result = requestTask.Result;
-                    if (result.IsSuccessful)
-                    {
-                        Logger?.Log(LogLevel.Info, "Received response to test message", result.Response);
-                    }
-                    else
-                    {
-                        Logger?.Log(LogLevel.Error, "Error when sending test request", result.Exception);
-                    }
-                }
-            });
+
+            PreTest(client).GetAwaiter().GetResult();
 
             while (true)
             {
@@ -83,6 +66,30 @@ namespace Test
 
             client.Close().Wait();
             service.Stop().Wait();
+        }
+
+        private static async Task PreTest(TestClient client)
+        {
+            RequestResult result;
+
+            result = await client.SendRequest(new Request("test", "this is a test"), TimeSpan.FromSeconds(10));
+            if (!result.IsSuccessful)
+            {
+                throw result.Exception;
+            }
+
+            try
+            {
+                result = await client.SendRequest(new Request("Exception", null), TimeSpan.FromSeconds(10));
+                if (!result.IsSuccessful)
+                {
+                    throw result.Exception;
+                }
+            }
+            catch (ErrorResponseException ex)
+            {
+                Logger?.Log(LogLevel.Info, "Received expected exception.", ex.ErrorInfo);
+            }
         }
     }
 }

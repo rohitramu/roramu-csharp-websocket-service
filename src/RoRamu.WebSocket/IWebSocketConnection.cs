@@ -7,6 +7,8 @@ namespace RoRamu.WebSocket
 
     /// <summary>
     /// Represents the actions available for interacting with a websocket connection.
+    ///
+    /// TODO: Make this interface disposable.
     /// </summary>
     public interface IWebSocketConnection
     {
