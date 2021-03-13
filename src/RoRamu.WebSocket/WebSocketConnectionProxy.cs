@@ -232,7 +232,7 @@
                     requestId: messageId,
                     includeStackTrace: false);
 
-                await this.SendMessage(errorResponse).ContinueWith(sendTask =>
+                _ = this.SendMessage(errorResponse).ContinueWith(sendTask =>
                 {
                     this.Logger?.Log(LogLevel.Warning, $"Failed to send error", sendTask.Exception);
                 }, TaskContinuationOptions.OnlyOnFaulted);
