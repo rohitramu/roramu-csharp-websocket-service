@@ -2,4 +2,4 @@ import:
   - rohitramu/roramu-travis-shared:csharp.yml@master
   - rohitramu/roramu-travis-shared:csharp_deploy_nuget.yml@master
 
-solution: RoRamu.WebSocket.Service.sln
+solution: roramu-csharp-websocket-service.sln

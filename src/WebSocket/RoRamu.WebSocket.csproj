@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <ItemGroup>
     <PackageReference Include="RoRamu.Utils" />
     <PackageReference Include="RoRamu.Utils.Logging" />
     <PackageReference Include="RoRamu.Utils.Messaging" />
   </ItemGroup>
+
 </Project>

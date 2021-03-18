@@ -4,6 +4,9 @@
         <PackageReference Update="RoRamu.Utils" Version="*" />
         <PackageReference Update="RoRamu.Utils.Logging" Version="*" />
         <PackageReference Update="RoRamu.Utils.Messaging" Version="*" />
+
+        <PackageReference Update="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
+        <PackageReference Update="FluentAssertions" Version="5.10.3" />
     </ItemGroup>
 
 </Project>

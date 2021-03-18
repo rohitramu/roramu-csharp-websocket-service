@@ -5,7 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RoRamu.WebSocket.Client\RoRamu.WebSocket.Client.csproj" />
+    <ProjectReference Include="$(SrcRoot)WebSocket.Client\RoRamu.WebSocket.Client.csproj" />
   </ItemGroup>
 
 </Project>

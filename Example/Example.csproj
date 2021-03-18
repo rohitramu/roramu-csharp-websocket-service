@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,10 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\RoRamu.WebSocket.Client.WebSocket4Net\RoRamu.WebSocket.Client.WebSocket4Net.csproj" />
-    <ProjectReference Include="..\src\RoRamu.WebSocket.Client\RoRamu.WebSocket.Client.csproj" />
-    <ProjectReference Include="..\src\RoRamu.WebSocket.Server.Fleck\RoRamu.WebSocket.Server.Fleck.csproj" />
-    <ProjectReference Include="..\src\RoRamu.WebSocket.Service\RoRamu.WebSocket.Service.csproj" />
+    <ProjectReference Include="$(SrcRoot)WebSocket.Client.WebSocket4Net\RoRamu.WebSocket.Client.WebSocket4Net.csproj" />
+    <ProjectReference Include="$(SrcRoot)WebSocket.Client\RoRamu.WebSocket.Client.csproj" />
+    <ProjectReference Include="$(SrcRoot)WebSocket.Server.Fleck\RoRamu.WebSocket.Server.Fleck.csproj" />
+    <ProjectReference Include="$(SrcRoot)WebSocket.Service\RoRamu.WebSocket.Service.csproj" />
   </ItemGroup>
 
 </Project>

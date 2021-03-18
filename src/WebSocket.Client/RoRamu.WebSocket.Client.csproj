@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\RoRamu.WebSocket\RoRamu.WebSocket.csproj" />
+    <ProjectReference Include="$(SrcRoot)WebSocket\RoRamu.WebSocket.csproj" />
   </ItemGroup>
 
 </Project>

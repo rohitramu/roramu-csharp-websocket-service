@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <ProjectReference Include="$(SrcRoot)WebSocket.Client/RoRamu.WebSocket.Client.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentAssertions" />
+    </ItemGroup>
+
+</Project>

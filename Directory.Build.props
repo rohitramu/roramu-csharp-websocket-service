@@ -1,0 +1,7 @@
+<Project>
+    <PropertyGroup>
+        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+        <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+        <SrcRoot>$(RepoRoot)src/</SrcRoot>
+    </PropertyGroup>
+</Project>

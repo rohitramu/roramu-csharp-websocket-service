@@ -1,8 +1,15 @@
 <Project>
+    <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>$(AssembyName).Test</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <Authors>Rohit Ramu</Authors>
+        <Authors>Rohit Ramu;Harjaap Singh</Authors>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>

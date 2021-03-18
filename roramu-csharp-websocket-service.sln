@@ -1,0 +1,107 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example", "Example\Example.csproj", "{ADE7F620-3230-4211-A063-0C60B28B3631}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoRamu.WebSocket.Server", "src\WebSocket.Server\RoRamu.WebSocket.Server.csproj", "{F971E093-635E-4FCB-ACF1-A34313D35D92}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoRamu.WebSocket.Server.Fleck", "src\WebSocket.Server.Fleck\RoRamu.WebSocket.Server.Fleck.csproj", "{9CDCBD58-5419-44E4-9D17-66D849569A9C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoRamu.WebSocket.Service", "src\WebSocket.Service\RoRamu.WebSocket.Service.csproj", "{5C8023D9-91FE-4BD6-A0BC-76BCFF4CA402}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoRamu.WebSocket.Client", "src\WebSocket.Client\RoRamu.WebSocket.Client.csproj", "{A9396186-729B-470E-9A8E-D28740729177}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoRamu.WebSocket", "src\WebSocket\RoRamu.WebSocket.csproj", "{422EAF51-06F2-4960-85B6-7341E04DBDE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoRamu.WebSocket.Client.WebSocket4Net", "src\WebSocket.Client.WebSocket4Net\RoRamu.WebSocket.Client.WebSocket4Net.csproj", "{62C99A46-46A9-40A4-918A-38797422D549}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{70D3E8A4-CB2B-4981-83B7-004A7D658635}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoRamu.WebSocket.Test", "test\WebSocket\RoRamu.WebSocket.Test.csproj", "{98CC55B3-E5BA-42CB-B004-DA64566D7D72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoRamu.WebSocket.Client.Test", "test\WebSocket.Client\RoRamu.WebSocket.Client.Test.csproj", "{FBAB770A-4753-498B-AAEC-0C8BD1C8DDD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoRamu.WebSocket.Client.WebSocket4Net.Test", "test\WebSocket.Client.WebSocket4Net\RoRamu.WebSocket.Client.WebSocket4Net.Test.csproj", "{3A4417E3-AE02-4F58-9FAC-BB3231F754EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoRamu.WebSocket.Server.Test", "test\WebSocket.Server\RoRamu.WebSocket.Server.Test.csproj", "{4A566638-E0B4-43B7-879F-8A520D99C7F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoRamu.WebSocket.Server.Fleck.Test", "test\WebSocket.Server.Fleck\RoRamu.WebSocket.Server.Fleck.Test.csproj", "{656D4A70-E108-40C3-9C65-5E10C864F15D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoRamu.WebSocket.Service.Test", "test\WebSocket.Service\RoRamu.WebSocket.Service.Test.csproj", "{58BC7827-1D3B-410F-93CC-7AFA30E94CCB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ADE7F620-3230-4211-A063-0C60B28B3631}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADE7F620-3230-4211-A063-0C60B28B3631}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADE7F620-3230-4211-A063-0C60B28B3631}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADE7F620-3230-4211-A063-0C60B28B3631}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F971E093-635E-4FCB-ACF1-A34313D35D92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F971E093-635E-4FCB-ACF1-A34313D35D92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F971E093-635E-4FCB-ACF1-A34313D35D92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F971E093-635E-4FCB-ACF1-A34313D35D92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CDCBD58-5419-44E4-9D17-66D849569A9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CDCBD58-5419-44E4-9D17-66D849569A9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CDCBD58-5419-44E4-9D17-66D849569A9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CDCBD58-5419-44E4-9D17-66D849569A9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C8023D9-91FE-4BD6-A0BC-76BCFF4CA402}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C8023D9-91FE-4BD6-A0BC-76BCFF4CA402}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C8023D9-91FE-4BD6-A0BC-76BCFF4CA402}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C8023D9-91FE-4BD6-A0BC-76BCFF4CA402}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9396186-729B-470E-9A8E-D28740729177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9396186-729B-470E-9A8E-D28740729177}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9396186-729B-470E-9A8E-D28740729177}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9396186-729B-470E-9A8E-D28740729177}.Release|Any CPU.Build.0 = Release|Any CPU
+		{422EAF51-06F2-4960-85B6-7341E04DBDE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{422EAF51-06F2-4960-85B6-7341E04DBDE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{422EAF51-06F2-4960-85B6-7341E04DBDE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{422EAF51-06F2-4960-85B6-7341E04DBDE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62C99A46-46A9-40A4-918A-38797422D549}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62C99A46-46A9-40A4-918A-38797422D549}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62C99A46-46A9-40A4-918A-38797422D549}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62C99A46-46A9-40A4-918A-38797422D549}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98CC55B3-E5BA-42CB-B004-DA64566D7D72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98CC55B3-E5BA-42CB-B004-DA64566D7D72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98CC55B3-E5BA-42CB-B004-DA64566D7D72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98CC55B3-E5BA-42CB-B004-DA64566D7D72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBAB770A-4753-498B-AAEC-0C8BD1C8DDD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBAB770A-4753-498B-AAEC-0C8BD1C8DDD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBAB770A-4753-498B-AAEC-0C8BD1C8DDD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBAB770A-4753-498B-AAEC-0C8BD1C8DDD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A4417E3-AE02-4F58-9FAC-BB3231F754EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A4417E3-AE02-4F58-9FAC-BB3231F754EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A4417E3-AE02-4F58-9FAC-BB3231F754EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A4417E3-AE02-4F58-9FAC-BB3231F754EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A566638-E0B4-43B7-879F-8A520D99C7F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A566638-E0B4-43B7-879F-8A520D99C7F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A566638-E0B4-43B7-879F-8A520D99C7F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A566638-E0B4-43B7-879F-8A520D99C7F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{656D4A70-E108-40C3-9C65-5E10C864F15D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{656D4A70-E108-40C3-9C65-5E10C864F15D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{656D4A70-E108-40C3-9C65-5E10C864F15D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{656D4A70-E108-40C3-9C65-5E10C864F15D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58BC7827-1D3B-410F-93CC-7AFA30E94CCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58BC7827-1D3B-410F-93CC-7AFA30E94CCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58BC7827-1D3B-410F-93CC-7AFA30E94CCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58BC7827-1D3B-410F-93CC-7AFA30E94CCB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {90E49579-D0A5-4E0B-920E-72AA509801B7}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{98CC55B3-E5BA-42CB-B004-DA64566D7D72} = {70D3E8A4-CB2B-4981-83B7-004A7D658635}
+		{FBAB770A-4753-498B-AAEC-0C8BD1C8DDD2} = {70D3E8A4-CB2B-4981-83B7-004A7D658635}
+		{3A4417E3-AE02-4F58-9FAC-BB3231F754EB} = {70D3E8A4-CB2B-4981-83B7-004A7D658635}
+		{4A566638-E0B4-43B7-879F-8A520D99C7F2} = {70D3E8A4-CB2B-4981-83B7-004A7D658635}
+		{656D4A70-E108-40C3-9C65-5E10C864F15D} = {70D3E8A4-CB2B-4981-83B7-004A7D658635}
+		{58BC7827-1D3B-410F-93CC-7AFA30E94CCB} = {70D3E8A4-CB2B-4981-83B7-004A7D658635}
+	EndGlobalSection
+EndGlobal
